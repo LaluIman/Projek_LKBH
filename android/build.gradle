@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.8.1'  // Your Gradle plugin version may vary
+        classpath 'com.google.gms:google-services:4.4.2' // Make sure this line is added
+    }
+}
+
+allprojects {
+    repositories {
+        google()  // Make sure this is present
+        mavenCentral()
+    }
+     tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:-options"
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

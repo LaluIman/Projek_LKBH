@@ -1,0 +1,2 @@
+/Users/laluimanabdullah/Documents/ITmabruh/Flutter_stuff/aplikasi_lkbh_unmul/android/app/.cxx/Debug/2a4b5t5h/x86/CMakeFiles/edit_cache.dir
+/Users/laluimanabdullah/Documents/ITmabruh/Flutter_stuff/aplikasi_lkbh_unmul/android/app/.cxx/Debug/2a4b5t5h/x86/CMakeFiles/rebuild_cache.dir

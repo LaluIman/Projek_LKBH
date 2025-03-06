@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1092859518920",
+    "project_id": "lkbh-database",
+    "storage_bucket": "lkbh-database.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092859518920:android:11b1e6f732be9100966afd",
+        "android_client_info": {
+          "package_name": "com.example.aplikasi_lkbh_unmul"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHYeoX4lJ7KZu33K--J4Xo0Ch3Jd_NM4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
