@@ -1,0 +1,20 @@
+*.dart linguist-language=Dart
+
+# Completely disable detection of Makefiles and related files
+Makefile linguist-detectable=false
+*.mk linguist-detectable=false
+*.sh linguist-detectable=false
+*.yml linguist-detectable=false
+*.yaml linguist-detectable=false
+
+# Ignore other non-Dart files
+*.js linguist-vendored
+*.m linguist-vendored
+*.h linguist-vendored
+*.swift linguist-vendored
+*.html linguist-vendored
+*.rb linguist-vendored
+*.java linguist-vendored
+*.c linguist-vendored
+*.cpp linguist-vendored
+*.cmake linguist-vendored
