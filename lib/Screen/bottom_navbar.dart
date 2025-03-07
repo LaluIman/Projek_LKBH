@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:aplikasi_lkbh_unmul/Screen/User/account_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/consultation_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/home_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/news_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Account/account_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/consultation_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Home/home_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/news_screen.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

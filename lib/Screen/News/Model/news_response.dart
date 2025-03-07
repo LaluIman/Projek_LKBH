@@ -1,4 +1,4 @@
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Model/news.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news.dart';
 
 class NewsResponse {
   List<Data>? data;

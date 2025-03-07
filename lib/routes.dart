@@ -1,10 +1,10 @@
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/complete_profile_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/login_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/account_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/bottom_navbar.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/consultation_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/home_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/news_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Account/account_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/consultation_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Home/home_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/news_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/splash_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/success_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/terjadwalkan_screen.dart';

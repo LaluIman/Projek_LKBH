@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Model/news_response.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiCaller {

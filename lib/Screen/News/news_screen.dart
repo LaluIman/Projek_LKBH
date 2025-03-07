@@ -1,7 +1,7 @@
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Components/news_item.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Components/shimmer.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Model/news_response.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Model/api_caller.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Model/api_caller.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 

@@ -1,4 +1,4 @@
-import 'package:aplikasi_lkbh_unmul/Screen/User/News/Model/news.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
