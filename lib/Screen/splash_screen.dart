@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3),(){
-        Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
+        Navigator.pushReplacementNamed(context, '/himbauan');
     });
   }
 
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(
                 fontSize: 32,
                 color: Colors.white,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w700,
               ),
             ),
             Text(
@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 30),
+        padding: const EdgeInsets.only(bottom: 35),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
               "LKBH FH Universitas Mulawarman terakreditasi B \n berdasarkan Keputusan Menteri Hukum Republik Indonesia \n Nomor: M.HH-6.HN.04.03 Tahun 2024",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),

@@ -24,6 +24,7 @@ dependencies:
   loading_indicator: ^3.1.1
   modal_bottom_sheet: ^3.0.0
   rename_app: ^1.6.2
+  scaffold_gradient_background: ^1.0.3+1
   share_plus: ^10.1.4
   shimmer: ^3.0.0
   text_divider: ^1.0.0
