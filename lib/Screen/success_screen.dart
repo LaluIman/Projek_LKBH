@@ -49,7 +49,9 @@ void initState() {
                 SizedBox(height: 50,),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: DefaultButton(text: "Ke beranda", press: (){}, bgcolor: KPrimaryColor, textColor: Colors.white),
+                  child: DefaultButton(text: "Ke beranda", press: (){
+                    Navigator.pushReplacementNamed(context, "/custom_navigation_bar");
+                  }, bgcolor: KPrimaryColor, textColor: Colors.white),
                 )
               ],
             ),

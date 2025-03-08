@@ -8,7 +8,7 @@ class FlushbarNotif {
       {
       int durationInSeconds = 3,
       FlushbarPosition position = FlushbarPosition.TOP}) async {
-    await Future.delayed(Duration.zero);
+    await Future.delayed(Duration(seconds: 1));
     Flushbar(
       messageText: Text(
         message,

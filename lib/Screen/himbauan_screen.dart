@@ -97,7 +97,7 @@ class HimbauanScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(

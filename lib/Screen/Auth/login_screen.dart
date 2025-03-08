@@ -20,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String? password;
   final List<String> errors = [];
 
+  bool _isPasswordVisible = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
         width: double.infinity,
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SizedBox(
                 height: 10,
@@ -91,9 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                               }
-                              if (errors.isEmpty) {
-                                print("lol");
-                              }
+                              if (errors.isEmpty) {}
                             },
                             bgcolor: KPrimaryColor,
                             textColor: Colors.white),
@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         return null;
       },
-      obscureText: true,
+      obscureText: _isPasswordVisible,
       decoration: InputDecoration(
         prefixIcon: Padding(
           padding: const EdgeInsets.all(10),
@@ -161,6 +161,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         labelText: "Password",
         hintText: "Berikan password yang rumit",
+        suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            },
+            icon: _isPasswordVisible
+                ? SvgPicture.asset("assets/icons/Eye Open.svg")
+                : SvgPicture.asset("assets/icons/Eye Close.svg")),
       ),
     );
   }
