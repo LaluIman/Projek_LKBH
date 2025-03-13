@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
+import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +16,7 @@ class CompleteProfileScreen extends StatefulWidget {
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   TextEditingController dateController = TextEditingController();
   String? selectedProfesi = 'Profesi';
+  final _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +95,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           height: 10,
                         ),
                         Text(
-                          "Kamu akan masuk aplikasi menggunakan \n akun example@mail.com",
+                          "Kamu akan masuk aplikasi menggunakan \n akun ${_auth.getCurrentUser()!.email.toString()}",
                           textAlign: TextAlign.center,
                           style: TextStyle(color: KGray),
                         ),

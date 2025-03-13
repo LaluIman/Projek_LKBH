@@ -23,7 +23,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
     const HomeScreen(),
     const ConsultationScreen(),
     const NewsScreen(),
-    const AccountScreen(),
+    AccountScreen(),
   ];
 
    final Color selectedIconColor = KPrimaryColor;

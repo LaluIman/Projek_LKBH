@@ -23,8 +23,8 @@ Row errorText({required String text}) {
         children: [
           SvgPicture.asset(
             'assets/icons/Error.svg',
-            height: 14,
-            width: 14,
+            height: 12,
+            width: 12,
           ),
           SizedBox(
             width: 5,
@@ -33,6 +33,7 @@ Row errorText({required String text}) {
             text,
             style: const TextStyle(
               color: Colors.red,
+              fontSize: 12
             ),
           )
         ],

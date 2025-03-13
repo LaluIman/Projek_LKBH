@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aplikasi_lkbh_unmul/styling.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -16,10 +17,17 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 5),(){
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Sudah login → ke halaman himbauan
+        Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
+      } else {
+        // Belum login → ke halaman login
         Navigator.pushReplacementNamed(context, '/himbauan');
+      }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
