@@ -42,6 +42,9 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
         selectedLabelStyle: TextStyle(
           fontWeight: FontWeight.w600
         ),
+        unselectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.w500
+        ),
          onTap: (value) {
           setState(() {
             _selectedIndex = value;

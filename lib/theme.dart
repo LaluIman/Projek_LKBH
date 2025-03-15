@@ -6,6 +6,9 @@ themeData(){
     fontFamily: 'PlusJakartaSans',
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: KBg,
+    appBarTheme: AppBarTheme(
+      color: KBg
+    ),
     //inputdecoration
     inputDecorationTheme: inputDecoration()
 );
