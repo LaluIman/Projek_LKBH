@@ -14,110 +14,112 @@ class HimbauanScreen extends StatelessWidget {
         Color(0xff0E3350),
         Color(0xff25435A),
       ]),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Image.asset("assets/images/Indobre.png"),
-            SizedBox(
-              height: 100,
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 70),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                  Colors.white38,
-                  Colors.white,
-                ]),
-                color: Color.fromARGB(35, 254, 254, 254),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Image.asset("assets/images/Indobre.png"),
+              SizedBox(
+                height: 50,
+              ),
+              Container(
+                padding: EdgeInsets.only(bottom: 70),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                    Colors.white38,
+                    Colors.white,
+                  ]),
+                  color: Color.fromARGB(35, 254, 254, 254),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  "Layanan konsultasi dan bantuan hukum ini adalah \n gratis/",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "pro bono",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  ", bagi masyarakat kurang mampu yang berdomisili di Provinsi ",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Kalimantan Timur",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.white,
+                                decorationThickness: 2
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "(dengan menyertakan SKTM/Surat Keterangan Tidak Mampu)",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 70,
+                      ),
+                      DefaultButton(
+                          text: "Lanjutkan",
+                          press: () {
+                            Navigator.pushReplacementNamed(context, "/login");
+                          },
+                          bgcolor: KPrimaryColor,
+                          textColor: Colors.white),
+                      SizedBox(
+                        height: 70,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                                "Layanan konsultasi dan bantuan hukum ini adalah \n gratis/",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "pro bono",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                                ", bagi masyarakat kurang mampu yang berdomisili di Provinsi ",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Kalimantan Timur",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              decoration: TextDecoration.underline,
-                              decorationColor: Colors.white,
-                              decorationThickness: 2
-                            ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      "(dengan menyertakan SKTM/Surat Keterangan Tidak Mampu)",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 70,
-                    ),
-                    DefaultButton(
-                        text: "Lanjutkan",
-                        press: () {
-                          Navigator.pushReplacementNamed(context, "/login");
-                        },
-                        bgcolor: KPrimaryColor,
-                        textColor: Colors.white),
-                    SizedBox(
-                      height: 70,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

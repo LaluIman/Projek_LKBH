@@ -1,10 +1,12 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/error_message_form.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Auth/register_screen.dart';
 import 'package:aplikasi_lkbh_unmul/error_message.dart';
 import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:text_divider/text_divider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -52,8 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   "Lanjut dengan Gmail dan Password \n atau masuk menggunakan Google.",
                   style: TextStyle(color: KGray),
                 ),
-                const SizedBox(height: 20),
-                Image.asset("assets/images/Justice masbro.png", fit: BoxFit.cover),
+                const SizedBox(height: 15),
+                Image.asset("assets/images/Justice masbro.png",
+                    fit: BoxFit.cover),
                 Container(
                   padding: const EdgeInsets.only(bottom: 70),
                   decoration: const BoxDecoration(
@@ -94,46 +97,43 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context: context,
                                     barrierDismissible: false,
                                     builder: (context) => Center(
-                                      child: Container(
-                                        width: 200,
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            CircularProgressIndicator(
-                                              color: KPrimaryColor,
-                                              strokeWidth: 5,
-                                              strokeAlign: 2,
-                                            ),
-                                            SizedBox(height: 20,),
-                                            Text(
-                                              "Sedang diproses...",
-                                              style: TextStyle(
-                                                color: KPrimaryColor,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                                decoration: TextDecoration.none
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          LoadingAnimationWidget.inkDrop(
+                                              color: KPrimaryColor, size: 70),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                          Text(
+                                            "Tunggu sebentar...",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                                decoration:
+                                                    TextDecoration.none),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   );
 
-                                  await Future.delayed(const Duration(seconds: 3));
+                                  await Future.delayed(
+                                      const Duration(seconds: 3));
 
                                   // Tutup loading dan navigasi ke halaman berikutnya
                                   Navigator.pop(context);
                                   // Jika login berhasil, arahkan ke halaman berikutnya
-                                  Navigator.pushReplacementNamed(context, "/custom_navigation_bar");
+                                  Navigator.pushReplacementNamed(
+                                      context, "/custom_navigation_bar");
                                 } catch (e) {
                                   setState(() {
-                                    errorMessage = e.toString().replaceAll("Exception:", "").trim();
+                                    errorMessage = e
+                                        .toString()
+                                        .replaceAll("Exception:", "")
+                                        .trim();
                                   });
                                 }
                               }
@@ -148,54 +148,75 @@ class _LoginScreenState extends State<LoginScreen> {
                             text: "Masuk dengan Google",
                             press: () async {
                               final _auth = AuthService();
-                              await _auth.signInWithGoogle();
+                              final result = await _auth.signInWithGoogle();
 
-                              // Tampilkan loading selama 3 detik
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) => Center(
-                                      child: Container(
-                                        width: 200,
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            CircularProgressIndicator(
-                                              color: KPrimaryColor,
-                                              strokeWidth: 5,
-                                              strokeAlign: 2,
-                                            ),
-                                            SizedBox(height: 20,),
-                                            Text(
-                                              "Sedang Progres...",
-                                              style: TextStyle(
-                                                color: KPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500,
-                                                decoration: TextDecoration.none
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                              if (result == null) {
+                                return;
+                              }
+
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      LoadingAnimationWidget.inkDrop(
+                                          color: KPrimaryColor, size: 70),
+                                      SizedBox(
+                                        height: 30,
                                       ),
-                                    ),
-                                  );
+                                      Text(
+                                        "Tunggu sebentar...",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                            decoration: TextDecoration.none),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
 
-                                  await Future.delayed(const Duration(seconds: 3));
-                                  // Tutup loading dan navigasi ke halaman berikutnya
-                                  Navigator.pop(context);
-                              
-                              Navigator.pushReplacementNamed(context, "/complete_profile");
+                              await Future.delayed(const Duration(seconds: 3));
+
+                              Navigator.pop(context);
+
+                              bool isNewUser =
+                                  result.additionalUserInfo?.isNewUser ?? false;
+
+                              if (isNewUser) {
+                                Navigator.pushReplacementNamed(
+                                    context, "/complete_profile");
+                              } else {
+                                Navigator.pushReplacementNamed(
+                                    context, "/custom_navigation_bar");
+                              }
                             },
                             bgcolor: KGoogleButton,
                             textColor: Colors.black,
                             icon: "assets/icons/Google Icon.svg",
                           ),
+                          const SizedBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Belum ada akun? "),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, RegisterScreen.routeName);
+                                },
+                                child: Text(
+                                  "Daftar sekarang!",
+                                  style: TextStyle(
+                                      color: KPrimaryColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -227,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SvgPicture.asset("assets/icons/Lock Icon.svg"),
         ),
         labelText: "Password",
-        hintText: "Berikan password yang rumit",
+        hintText: "Masukan password",
         suffixIcon: IconButton(
           onPressed: () {
             setState(() {
@@ -248,6 +269,8 @@ class _LoginScreenState extends State<LoginScreen> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return kEmailNullError;
+        } else if (!RegExp(r"^[a-zA-Z0-9._%+-]+@gmail\.com$").hasMatch(value)) {
+          return "Hanya boleh menggunakan Gmail";
         } else if (!emailValidatorRegExp.hasMatch(value)) {
           return kInvalidEmailError;
         }

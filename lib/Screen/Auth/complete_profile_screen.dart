@@ -30,24 +30,20 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 10,
+                    height: 35,
                   ),
                   Text(
-                    "Kamu pengguna baru di",
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    "Konsulhukum",
+                    "Selamat datang pengguna baru!",
                     style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                        color: KPrimaryColor,
-                        height: 0),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: KPrimaryColor,
+                    ),
                   ),
                   Text(
                     "Lengkapi Profil kamu sebelum kamu bisa \n lanjutkan untuk konsultasi!",
-                    textAlign: TextAlign.center,
                     style: TextStyle(color: KGray),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: 30,
@@ -88,16 +84,27 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                         DefaultButton(
                             text: "Lanjut",
-                            press: () {},
+                            press: () {
+                              // Navigator.pushReplacementNamed(context, '/success_login');
+                            },
                             bgcolor: KPrimaryColor,
                             textColor: Colors.white),
                         SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          "Kamu akan masuk aplikasi menggunakan \n akun ${_auth.getCurrentUser()!.email.toString()}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: KGray),
+                        Column(
+                          children: [
+                            Text(
+                              "Kamu akan masuk aplikasi menggunakan akun",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: KGray),
+                            ),
+                            Text(_auth.getCurrentUser()!.email.toString(), style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600
+                            ),)
+                          ],
                         ),
                       ],
                     )),
@@ -238,7 +245,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   onSurface: Colors.black,
                 ),
                 dialogBackgroundColor:
-                    Colors.white, // Background color of the date picker
+                    Colors.white,
               ),
               child: child!,
             );

@@ -1,6 +1,7 @@
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/complete_profile_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/login_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/account_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Auth/register_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/consultation_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Home/home_screen.dart';
@@ -16,6 +17,7 @@ final Map<String, WidgetBuilder> routes = {
   HimbauanScreen.routeName: (context) => HimbauanScreen(),
   CustomBottomNavbar.routeName: (context) => CustomBottomNavbar(),
   LoginScreen.routeName: (context) => LoginScreen(),
+  RegisterScreen.routeName: (context) => RegisterScreen(),
   CompleteProfileScreen.routeName: (context) => CompleteProfileScreen(),
   HomeScreen.routeName: (context) => HomeScreen(),
   ConsultationScreen.routeName: (context) => ConsultationScreen(),

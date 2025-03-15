@@ -29,11 +29,14 @@ Row errorText({required String text}) {
           SizedBox(
             width: 5,
           ),
-          Text(
-            text,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 12
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12
+              ),
+              maxLines: 2,
             ),
           )
         ],
