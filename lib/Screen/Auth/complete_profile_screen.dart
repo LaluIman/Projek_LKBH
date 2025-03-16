@@ -1,6 +1,7 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
-import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -14,9 +15,48 @@ class CompleteProfileScreen extends StatefulWidget {
 }
 
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
-  TextEditingController dateController = TextEditingController();
   String? selectedProfesi = 'Profesi';
-  final _auth = AuthService();
+  final _namaController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _teleponController = TextEditingController();
+  final _alamatController = TextEditingController();
+  final _alamatDomisiliController = TextEditingController();
+  final _nikController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _namaController.dispose();
+    _dateController.dispose();
+    _teleponController.dispose();
+    _alamatController.dispose();
+    _alamatDomisiliController.dispose();
+    _nikController.dispose();
+    super.dispose();
+  }
+
+  Future<void> completeProfile() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'nama': _namaController.text.trim(),
+            'tanggal_lahir': _dateController.text.trim(),
+            'profesi': selectedProfesi,
+            'telepon': _teleponController.text.trim(),
+            'alamat': _alamatController.text.trim(),
+            'alamat_domisili': _alamatDomisiliController.text.trim(),
+            'nik': _nikController.text.trim(),
+          });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profil berhasil disimpan!")));
+          Navigator.pushReplacementNamed(context, '/success_login');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Gagal menyimpan profil: $e")));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,64 +90,29 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Form(
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
                         child: Column(
-                      children: [
-                        namaForm(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        umurPicker(context),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        profesiPicker(),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        teleponForm(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        alamatForm(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        alamatDomisili(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        nikForm(),
-                        // ErrorMessageForm(errors: errors)
-                        SizedBox(
-                          height: 50,
-                        ),
-                        DefaultButton(
-                            text: "Lanjut",
-                            press: () {
-                              // Navigator.pushReplacementNamed(context, '/success_login');
-                            },
-                            bgcolor: KPrimaryColor,
-                            textColor: Colors.white),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Column(
                           children: [
-                            Text(
-                              "Kamu akan masuk aplikasi menggunakan akun",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: KGray),
+                            buildTextFormField(controller: _namaController, label: "Nama Lengkap", icon: "assets/icons/User Icon.svg"),
+                            buildDatePicker(),
+                            buildProfesiDropdown(),
+                            buildTextFormField(controller: _teleponController, label: "Nomor Telepon", icon: "assets/icons/Telepon Icon.svg", keyboardType: TextInputType.phone),
+                            buildTextFormField(controller: _alamatController, label: "Alamat KTP", icon: "assets/icons/Address Icon.svg"),
+                            buildTextFormField(controller: _alamatDomisiliController, label: "Alamat Domisili", icon: "assets/icons/Domisili Icon.svg"),
+                            buildTextFormField(controller: _nikController, label: "NIK", icon: "assets/icons/KTP Icon.svg", keyboardType: TextInputType.number),
+                            SizedBox(height: 20),
+                            DefaultButton(
+                              text: "Simpan Profil",
+                              press: completeProfile,
+                              bgcolor: KPrimaryColor,
+                              textColor: Colors.white,
                             ),
-                            Text(_auth.getCurrentUser()!.email.toString(), style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600
-                            ),)
                           ],
                         ),
-                      ],
-                    )),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -116,159 +121,101 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     );
   }
 
-  TextFormField alamatDomisili() {
-    return TextFormField(
-      decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SvgPicture.asset("assets/icons/Domisili Icon.svg"),
-        ),
-        labelText: "Alamat domisili sekarang",
-        hintText: "Provinsi, Kota, Jalan",
-      ),
-    );
-  }
+  Widget buildProfesiDropdown() {
+    List<String> profesiList = [
+      "Profesi",
+      "Guru",
+      "Dokter",
+      "Perawat",
+      "Insinyur",
+      "Akuntan",
+      "Pengacara",
+      "Polisi",
+      "Tentara",
+      "Pegawai Negeri Sipil (PNS)",
+      "Arsitek",
+      "Sales/Marketing",
+      "Petani",
+      "Nelayan",
+      "Chef/Koki",
+      "Pengusaha",
+      "Customer Service",
+      "Ahli IT (Information Technology)",
+      "Tukang Bangunan",
+      "Pekerjaan lain"
+    ];
 
-  TextFormField nikForm() {
-    return TextFormField(
-      decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SvgPicture.asset("assets/icons/KTP Icon.svg"),
-        ),
-        labelText: "(NIK) Nomor Induk Kependudukan",
-        hintText: "Nomor NIK",
-      ),
-      keyboardType: TextInputType.number,
-    );
-  }
-
-  TextFormField alamatForm() {
-    return TextFormField(
-      decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SvgPicture.asset("assets/icons/Address Icon.svg"),
-        ),
-        labelText: "Alamat sesuai KTP",
-        hintText: "Provinsi, Kota, Jalan",
-      ),
-    );
-  }
-
-  TextFormField teleponForm() {
-    return TextFormField(
-      decoration: InputDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DropdownButtonFormField<String>(
+        value: selectedProfesi,
+        decoration: InputDecoration(
+          labelText: "Profesi",
           prefixIcon: Padding(
             padding: const EdgeInsets.all(10),
-            child: SvgPicture.asset("assets/icons/Telepon Icon.svg"),
+            child: SvgPicture.asset("assets/icons/Profesi Icon.svg"),
           ),
-          labelText: "Nomor telepon",
-          hintText: "62+"),
-      keyboardType: TextInputType.phone,
-    );
-  }
-
-  DropdownButtonFormField<String> profesiPicker() {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SvgPicture.asset("assets/icons/Profesi Icon.svg"),
         ),
-      ),
-      value: selectedProfesi,
-      style: TextStyle(
-          fontSize: 17, color: Color(0xff909090), fontWeight: FontWeight.w600),
-      items: <String>[
-        "Profesi",
-        "Guru",
-        "Dokter",
-        "Perawat",
-        "Insinyur",
-        "Akuntan",
-        "Pengacara",
-        "Polisi",
-        "Tentara",
-        "Pegawai Negeri Sipil (PNS)",
-        "Arsitek",
-        "Sales/Marketing",
-        "Petani",
-        "Nelayan",
-        "Chef/Koki",
-        "Pengusaha",
-        "Customer Service",
-        "Ahli IT (Information Technology)",
-        "Tukang Bangunan",
-        "Pekerjaan lain"
-      ].map((String value) {
-        return DropdownMenuItem<String>(value: value, child: Text(value));
-      }).toList(),
-      onChanged: (String? newValue) {
-        selectedProfesi = newValue;
-      },
-      dropdownColor: Colors.white,
-      borderRadius: BorderRadius.circular(20),
-      menuMaxHeight: 400,
-      elevation: 1,
-      padding: EdgeInsets.only(right: 5),
-      icon: Icon(
-        Icons.arrow_drop_down_circle_rounded,
-        color: Colors.grey.shade500,
+        items: profesiList.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedProfesi = newValue;
+          });
+        },
+        validator: (value) => value == "Profesi" ? "Pilih profesi yang sesuai" : null,
       ),
     );
   }
 
-  TextFormField umurPicker(BuildContext context) {
-    return TextFormField(
-      controller: dateController,
-      decoration: InputDecoration(
-        labelText: "Umur",
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SvgPicture.asset("assets/icons/Calendar Icon.svg"),
-        ),
-      ),
-      readOnly: true,
-      onTap: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(1900),
-          lastDate: DateTime.now(),
-          builder: (BuildContext context, Widget? child) {
-            return Theme(
-              data: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: KPrimaryColor, 
-                  onPrimary: Colors.white,
-                  onSurface: Colors.black,
-                ),
-                dialogBackgroundColor:
-                    Colors.white,
-              ),
-              child: child!,
-            );
-          },
-        );
-
-        if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-          dateController.text = formattedDate;
-        }
-      },
-    );
-  }
-
-  TextFormField namaForm() {
-    return TextFormField(
-      decoration: InputDecoration(
-          labelText: "Nama Lengkap",
-          hintText: "Berikan nama lengkap kamu",
+  Widget buildTextFormField({required TextEditingController controller, required String label, required String icon, TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
           prefixIcon: Padding(
             padding: const EdgeInsets.all(10),
-            child: SvgPicture.asset("assets/icons/User Icon.svg"),
-          )),
+            child: SvgPicture.asset(icon),
+          ),
+        ),
+        keyboardType: keyboardType,
+        validator: (value) => value == null || value.isEmpty ? "$label tidak boleh kosong" : null,
+      ),
+    );
+  }
+
+  Widget buildDatePicker() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextFormField(
+        controller: _dateController,
+        decoration: InputDecoration(
+          labelText: "Tanggal Lahir",
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(10),
+            child: SvgPicture.asset("assets/icons/Calendar Icon.svg"),
+          ),
+        ),
+        readOnly: true,
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now(),
+          );
+          if (pickedDate != null) {
+            _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+          }
+        },
+        validator: (value) => value == null || value.isEmpty ? "Tanggal lahir tidak boleh kosong" : null,
+      ),
     );
   }
 }
