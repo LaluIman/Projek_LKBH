@@ -30,7 +30,6 @@ class DefaultButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Conditionally render the icon if it's not an empty string
             if (icon.isNotEmpty) SvgPicture.asset(icon),
             if (icon.isNotEmpty) SizedBox(width: 10),
             Text(
