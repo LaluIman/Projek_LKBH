@@ -1,3 +1,7 @@
+import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/data_diri_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/pengaturan_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/profil_lkbh_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/qna_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/complete_profile_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/login_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/account_screen.dart';
@@ -25,4 +29,9 @@ final Map<String, WidgetBuilder> routes = {
   AccountScreen.routeName: (context) => AccountScreen(),
   SuccessScreen.routeName: (context) => SuccessScreen(),
   TerjadwalkanScreen.routeName: (context) => TerjadwalkanScreen(),
+  //Profile
+  DataDiriScreen.routeName: (context) => DataDiriScreen(),
+  PengaturanScreen.routeName : (context) => PengaturanScreen(),
+  QnaScreen.routeName: (context) => QnaScreen(),
+  ProfilLkbhScreen.routeName: (context) => ProfilLkbhScreen(),
 };
