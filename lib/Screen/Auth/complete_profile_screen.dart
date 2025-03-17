@@ -40,7 +40,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
       try {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .set({
             'nama': _namaController.text.trim(),
             'tanggal_lahir': _dateController.text.trim(),
             'profesi': selectedProfesi,
@@ -49,11 +52,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             'alamat_domisili': _alamatDomisiliController.text.trim(),
             'nik': _nikController.text.trim(),
           });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profil berhasil disimpan!")));
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profil berhasil disimpan!")));
           Navigator.pushReplacementNamed(context, '/success_login');
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Gagal menyimpan profil: $e")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Gagal menyimpan profil: $e")));
       }
     }
   }
@@ -95,13 +99,30 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            buildTextFormField(controller: _namaController, label: "Nama Lengkap", icon: "assets/icons/User Icon.svg"),
+                            buildTextFormField(
+                                controller: _namaController,
+                                label: "Nama Lengkap",
+                                icon: "assets/icons/User Icon.svg"),
                             buildDatePicker(),
                             buildProfesiDropdown(),
-                            buildTextFormField(controller: _teleponController, label: "Nomor Telepon", icon: "assets/icons/Telepon Icon.svg", keyboardType: TextInputType.phone),
-                            buildTextFormField(controller: _alamatController, label: "Alamat KTP", icon: "assets/icons/Address Icon.svg"),
-                            buildTextFormField(controller: _alamatDomisiliController, label: "Alamat Domisili", icon: "assets/icons/Domisili Icon.svg"),
-                            buildTextFormField(controller: _nikController, label: "NIK", icon: "assets/icons/KTP Icon.svg", keyboardType: TextInputType.number),
+                            buildTextFormField(
+                                controller: _teleponController,
+                                label: "Nomor Telepon",
+                                icon: "assets/icons/Telepon Icon.svg",
+                                keyboardType: TextInputType.phone),
+                            buildTextFormField(
+                                controller: _alamatController,
+                                label: "Alamat KTP",
+                                icon: "assets/icons/Address Icon.svg"),
+                            buildTextFormField(
+                                controller: _alamatDomisiliController,
+                                label: "Alamat Domisili",
+                                icon: "assets/icons/Domisili Icon.svg"),
+                            buildTextFormField(
+                                controller: _nikController,
+                                label: "NIK",
+                                icon: "assets/icons/KTP Icon.svg",
+                                keyboardType: TextInputType.number),
                             SizedBox(height: 20),
                             DefaultButton(
                               text: "Simpan Profil",
@@ -148,6 +169,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField<String>(
+        menuMaxHeight: 400,
+        dropdownColor: Colors.white,
+        elevation: 1,
+        borderRadius: BorderRadius.circular(16),
         value: selectedProfesi,
         decoration: InputDecoration(
           labelText: "Profesi",
@@ -167,12 +192,17 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             selectedProfesi = newValue;
           });
         },
-        validator: (value) => value == "Profesi" ? "Pilih profesi yang sesuai" : null,
+        validator: (value) =>
+            value == "Profesi" ? "Pilih profesi yang sesuai" : null,
       ),
     );
   }
 
-  Widget buildTextFormField({required TextEditingController controller, required String label, required String icon, TextInputType keyboardType = TextInputType.text}) {
+  Widget buildTextFormField(
+      {required TextEditingController controller,
+      required String label,
+      required String icon,
+      TextInputType keyboardType = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
@@ -185,7 +215,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
           ),
         ),
         keyboardType: keyboardType,
-        validator: (value) => value == null || value.isEmpty ? "$label tidak boleh kosong" : null,
+        validator: (value) =>
+            value == null || value.isEmpty ? "$label tidak boleh kosong" : null,
       ),
     );
   }
@@ -209,12 +240,26 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             initialDate: DateTime.now(),
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
+            builder: (BuildContext context, Widget? child) {
+              return Theme(
+                data: ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: KPrimaryColor,
+                  ),
+                  dialogBackgroundColor:
+                      Colors.white,
+                ),
+                child: child!,
+              );
+            },
           );
           if (pickedDate != null) {
             _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
           }
         },
-        validator: (value) => value == null || value.isEmpty ? "Tanggal lahir tidak boleh kosong" : null,
+        validator: (value) => value == null || value.isEmpty
+            ? "Tanggal lahir tidak boleh kosong"
+            : null,
       ),
     );
   }
