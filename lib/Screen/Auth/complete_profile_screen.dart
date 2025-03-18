@@ -49,7 +49,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             'alamat_domisili': _alamatDomisiliController.text.trim(),
             'nik': _nikController.text.trim(),
           });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profil berhasil disimpan!")));
           Navigator.pushReplacementNamed(context, '/success_login');
         }
       } catch (e) {
