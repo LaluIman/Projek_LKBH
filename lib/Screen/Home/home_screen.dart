@@ -57,19 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               CarouselSlider(
                 items: [
-                  GestureDetector(
-                      onTap: () {
-                        
-                      },
-                      child: Image.asset("assets/images/banner 1.png")),
                   Image.asset("assets/images/banner 1.png"),
+                  Image.asset("assets/images/banner 2.png"),
                   Image.asset("assets/images/banner 1.png"),
                 ],
                 options: CarouselOptions(
                   height: 200,
                   scrollDirection: Axis.horizontal,
                   enableInfiniteScroll: false,
-                  aspectRatio: 16/9,
                   reverse: false,
                   autoPlay: true,
                   enlargeCenterPage: true,
