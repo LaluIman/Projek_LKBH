@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/data_diri_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/edit_data_diri_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/pengaturan_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/profil_lkbh_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/selections_screens/qna_screen.dart';
@@ -34,4 +35,8 @@ final Map<String, WidgetBuilder> routes = {
   PengaturanScreen.routeName : (context) => PengaturanScreen(),
   QnaScreen.routeName: (context) => QnaScreen(),
   ProfilLkbhScreen.routeName: (context) => ProfilLkbhScreen(),
+  EditDataDiriScreen.routeName: (context) => EditDataDiriScreen(
+    documentId: ModalRoute.of(context)!.settings.arguments as String,
+  ),
+
 };
