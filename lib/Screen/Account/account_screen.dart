@@ -4,13 +4,58 @@ import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/components/selections.dart';
 import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   static String routeName = "/account";
-  AccountScreen({super.key});
+  AccountScreen({super.key,});
+
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
   final auth = AuthService();
+  String? userName;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
+  }
+
+  Future<void> getUserName() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // print("User UID: ${user.uid}"); // Cek UID
+
+        String uid = user.uid;
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .get();
+
+        if (userDoc.exists) {
+          // print("Data ditemukan: ${userDoc.data()}");  // Debug data
+          setState(() {
+            userName = userDoc['nama'];
+          });
+        } else {
+          print('User tidak ditemukan di Firestore');
+        }
+      } else {
+        print('User belum login');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +77,8 @@ class AccountScreen extends StatelessWidget {
                       shape: BoxShape.circle),
                   child: Center(
                     child: Text(
-                      auth.getCurrentUser()!.email.toString().substring(0, 4).toUpperCase(),
+                      userName.toString().substring(0, 1).toUpperCase(),
+                      // auth.getCurrentUser()!.email.toString().substring(0, 4).toUpperCase(),
                       style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -41,7 +87,7 @@ class AccountScreen extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "Nama pengguna",
+                  userName ?? "Nama Pengguna",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

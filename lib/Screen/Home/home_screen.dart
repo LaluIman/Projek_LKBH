@@ -1,6 +1,7 @@
-import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,8 +13,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final auth = AuthService();
+  String? userName;
+
   int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
+  }
+
+  Future<void> getUserName() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // print("User UID: ${user.uid}"); // Cek UID
+
+        String uid = user.uid;
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .get();
+
+        if (userDoc.exists) {
+          // print("Data ditemukan: ${userDoc.data()}");  // Debug data
+          setState(() {
+            userName = userDoc['nama'];
+          });
+        } else {
+          print('User tidak ditemukan di Firestore');
+        }
+      } else {
+        print('User belum login');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: KPrimaryColor),
                       ),
                       Text(
-                        auth.getCurrentUser()!.email.toString(),
+                         userName ?? "User",
                         style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w700,
