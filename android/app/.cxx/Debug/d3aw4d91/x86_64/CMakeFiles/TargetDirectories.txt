@@ -1,0 +1,2 @@
+/Users/muhammad.darda/Downloads/FLUTTER_PROJECT/Projek_LKBH/android/app/.cxx/Debug/d3aw4d91/x86_64/CMakeFiles/edit_cache.dir
+/Users/muhammad.darda/Downloads/FLUTTER_PROJECT/Projek_LKBH/android/app/.cxx/Debug/d3aw4d91/x86_64/CMakeFiles/rebuild_cache.dir

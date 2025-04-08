@@ -1,0 +1,2 @@
+/Users/muhammad.darda/Projek_LKBH/android/app/.cxx/Debug/1n444i4f/x86/CMakeFiles/edit_cache.dir
+/Users/muhammad.darda/Projek_LKBH/android/app/.cxx/Debug/1n444i4f/x86/CMakeFiles/rebuild_cache.dir

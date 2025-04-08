@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,9 @@ class TerjadwalkanScreen extends StatelessWidget {
                 SizedBox(height: 50,),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: DefaultButton(text: "Ke beranda", press: (){}, bgcolor: KPrimaryColor, textColor: Colors.white),
+                  child: DefaultButton(text: "Ke beranda", press: (){
+                    Navigator.pushNamedAndRemoveUntil(context, '/custom_navigation_bar', (Route<dynamic> routeName) => false);
+                  }, bgcolor: KPrimaryColor, textColor: Colors.white),
                 )
               ],
             ),
