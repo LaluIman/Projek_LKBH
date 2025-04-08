@@ -1,0 +1,2 @@
+/Users/agenghadiwicaksono/Projek_LKBH/android/app/.cxx/Debug/05a3k421/x86_64/CMakeFiles/edit_cache.dir
+/Users/agenghadiwicaksono/Projek_LKBH/android/app/.cxx/Debug/05a3k421/x86_64/CMakeFiles/rebuild_cache.dir
