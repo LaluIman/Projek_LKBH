@@ -40,7 +40,7 @@ class Selections extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                  fontWeight: FontWeight.w700, fontSize: 13),
+                  fontWeight: FontWeight.w700, fontSize: 12),
             ),
             Spacer(),
             Icon(

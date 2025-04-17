@@ -180,19 +180,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
 
                               await Future.delayed(const Duration(seconds: 3));
-
                               Navigator.pop(context);
 
-                              bool isNewUser =
-                                  result.additionalUserInfo?.isNewUser ?? false;
-
-                              if (isNewUser) {
-                                Navigator.pushReplacementNamed(
-                                    context, "/complete_profile");
-                              } else {
-                                Navigator.pushReplacementNamed(
-                                    context, "/custom_navigation_bar");
+                              final user = _auth.getCurrentUser();
+                              // Cek apakah user login dengan Google dan emailnya belum diverifikasi
+                              if (user != null && !user.emailVerified) {
+                                if (!user.emailVerified) {
+                                  Navigator.pushReplacementNamed(context, "/verify");
+                                  return;
+                                }
                               }
+
+                              Navigator.pushReplacementNamed(context, "/complete_profile");
                             },
                             bgcolor: KGoogleButton,
                             textColor: Colors.black,

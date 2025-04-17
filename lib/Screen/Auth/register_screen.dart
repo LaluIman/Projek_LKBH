@@ -145,9 +145,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 );
 
                                 Navigator.pop(context);
+                                final user = _auth.getCurrentUser();
+                                // Cek apakah user login dengan Google dan emailnya belum diverifikasi
+                                if (user != null && !user.emailVerified) {
+                                  if (!user.emailVerified) {
+                                    Navigator.pushReplacementNamed(context, "/verify");
+                                    return;
+                                  }
+                                }
 
-                                Navigator.pushReplacementNamed(
-                                    context, "/complete_profile");
+                                Navigator.pushReplacementNamed(context, "/complete_profile");
                               } catch (e) {
                                 if (Navigator.canPop(context)) {
                                   Navigator.pop(context);
