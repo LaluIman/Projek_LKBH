@@ -58,7 +58,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
   }
 
   void startAutoReload() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
@@ -92,7 +92,7 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
           );
 
           // Delay 2–3 detik biar smooth transisi
-          await Future.delayed(const Duration(seconds: 2));
+          await Future.delayed(const Duration(seconds: 3));
 
           // Tutup dialog dan pindah ke halaman berikutnya
           Navigator.pop(context);
