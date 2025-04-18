@@ -28,6 +28,9 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 25,
+                  ),
                   Text("Jenis Konsultasi",style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w900,
@@ -44,9 +47,9 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                         shrinkWrap: true,
                         physics:BouncingScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 1.1,
-                          crossAxisSpacing: 10,
+                          crossAxisCount: 4,
+                          childAspectRatio: 1,
+                          crossAxisSpacing: 0,
                           mainAxisSpacing: 10,
                           // mainAxisSpacing: 10,
                         ), 
