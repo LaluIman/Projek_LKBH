@@ -27,7 +27,7 @@ class NewsItem extends StatelessWidget {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: SizedBox(
           width: double.infinity,
@@ -35,7 +35,7 @@ class NewsItem extends StatelessWidget {
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
                   fadeInCurve: Curves.linear,
                   fadeOutCurve: Curves.linear,

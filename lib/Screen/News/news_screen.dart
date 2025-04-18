@@ -1,10 +1,13 @@
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item_lkbh.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer_error.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/api_caller.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NewsScreen extends StatefulWidget {
   static String routeName = "/news";
@@ -80,8 +83,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height - 200,
                           child: TabBarView(children: [
-                            NewsOutside(),
-                            NewsOutside(),
+                            NewsLKBH(), // Firebase news
+                            NewsOutside(), // API news (unchanged)
                           ]),
                         ),
                       ),
@@ -97,6 +100,62 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 }
 
+class NewsLKBH extends StatelessWidget {
+  const NewsLKBH({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('berita')
+          .orderBy('createdAt', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return ShimmerEffect();
+        } else if (snapshot.hasError) {
+          return ShimmerError();
+        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.article_outlined,
+                  color: KPrimaryColor,
+                  size: 50,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Belum ada berita tersedia",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                )
+              ],
+            ),
+          );
+        } else {
+          final beritaList = snapshot.data!.docs;
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemCount: beritaList.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot doc = beritaList[index];
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              return NewsItemLkbh(news: data, docId: doc.id);
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+
 class NewsOutside extends StatelessWidget {
   const NewsOutside({
     super.key,
@@ -110,105 +169,7 @@ class NewsOutside extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ShimmerEffect();
           } else if (snapshot.hasError) {
-            return Stack(
-              children: [
-                Shimmer(
-                  enabled: true,
-                  gradient: LinearGradient(colors: [
-                    Colors.grey.shade200,
-                    Colors.grey.shade300,
-                    Colors.grey.shade200,
-                    Colors.grey.shade300,
-                    Colors.grey.shade200,
-                    Colors.grey.shade300,
-                    Colors.grey.shade200,
-                  ]),
-                  child: SingleChildScrollView(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 6,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 100,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 130,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: 240,
-                                      height: 15,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: 180,
-                                      height: 11,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Container(
-                                      width: 150,
-                                      height: 11,
-                                      color: Colors.grey.shade50,
-                                    ),
-                                    SizedBox(
-                                      height: 25,
-                                    ),
-                                    Container(
-                                      width: 70,
-                                      height: 12,
-                                      color: Colors.grey.shade50,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 200,
-                  left: 110,
-                  child: Column(
-                  children: [
-                    Icon(Icons.wifi_off, color: KPrimaryColor, size: 50,),
-                    SizedBox(height: 10,),
-                    Text("Tidak ada internet", style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600
-                    ),)
-                  ],
-                )),
-              ],
-            );
+            return ShimmerError();
           } else {
             final news = snapshot.data!.data!;
             return ListView.builder(

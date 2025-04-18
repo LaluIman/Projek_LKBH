@@ -101,7 +101,7 @@ class NewsDetailscreen extends StatelessWidget {
                           child: SizedBox(
                             width: double.infinity,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(10),
                               child: CachedNetworkImage(
                                 imageUrl: news.image!,
                                 fit: BoxFit.cover,
