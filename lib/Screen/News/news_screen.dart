@@ -6,7 +6,6 @@ import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/api_caller.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NewsScreen extends StatefulWidget {
