@@ -2,7 +2,6 @@ import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/number_symbols_data.dart';
 
 class LaporScreen extends StatefulWidget {
   static String routeName = "/laporScreen";

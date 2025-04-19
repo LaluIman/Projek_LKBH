@@ -23,10 +23,10 @@ class TerjadwalkanScreen extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   color: KPrimaryColor,
                 ),),
-                SizedBox(height: 20,),
+                SizedBox(height: 50,),
                 Image.asset("assets/images/Terjadwalkan.png"),
-                SizedBox(height: 20,),
-                Text("Kamu Akan di kabari oleh LKBH melewati \n Whatsapp", textAlign: TextAlign.center, style: TextStyle(
+                SizedBox(height: 50,),
+                Text("Kami akan menghubungi kamu melalui \n Whatsapp", textAlign: TextAlign.center, style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
                   color: Colors.black
@@ -34,7 +34,7 @@ class TerjadwalkanScreen extends StatelessWidget {
                 SizedBox(height: 50,),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: DefaultButton(text: "Ke beranda", press: (){
+                  child: DefaultButton(text: "Kembali ke beranda", press: (){
                     Navigator.pushNamedAndRemoveUntil(context, '/custom_navigation_bar', (Route<dynamic> routeName) => false);
                   }, bgcolor: KPrimaryColor, textColor: Colors.white),
                 )
