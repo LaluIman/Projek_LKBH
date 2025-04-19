@@ -294,7 +294,7 @@ class _EditDataDiriScreenState extends State<EditDataDiriScreen> {
       "Chef/Koki",
       "Pengusaha",
       "Customer Service",
-      "Ahli IT",
+      "Ahli IT (Information Technology)",
       "Tukang Bangunan",
       "Pekerjaan lain"
     ];
