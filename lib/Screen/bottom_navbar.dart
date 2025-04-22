@@ -12,12 +12,24 @@ class CustomBottomNavbar extends StatefulWidget {
   static String routeName = "/custom_navigation_bar";
   const CustomBottomNavbar({super.key});
 
+  static final GlobalKey<_CustomBottomNavbarState> navigationKey = GlobalKey<_CustomBottomNavbarState>();
+
+  static void navigateToTab(int index) {
+    navigationKey.currentState?.changeTab(index);
+  }
+
   @override
   State<CustomBottomNavbar> createState() => _CustomBottomNavbarState();
 }
 
 class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   int _selectedIndex = 0;
+
+   void changeTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   final List<Widget> _Screens = [
     const HomeScreen(),
