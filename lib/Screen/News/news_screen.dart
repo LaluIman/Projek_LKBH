@@ -155,20 +155,59 @@ class NewsLKBH extends StatelessWidget {
 }
 
 
-class NewsOutside extends StatelessWidget {
-  const NewsOutside({
-    super.key,
-  });
+class NewsOutside extends StatefulWidget {
+  const NewsOutside({Key? key}) : super(key: key);
+
+  @override
+  State<NewsOutside> createState() => _NewsOutsideState();
+}
+
+class _NewsOutsideState extends State<NewsOutside> {
+  late Future<NewsResponse> _newsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the future only once
+    _newsFuture = ApiCaller().fetchNews();
+  }
+
+  Future<void> _refreshNews() async {
+    // Force the widget to rebuild with a new future
+    setState(() {
+      _newsFuture = ApiCaller().fetchNews();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NewsResponse>(
-        future: ApiCaller().fetchNews(),
+    return RefreshIndicator(
+      onRefresh: _refreshNews,
+      child: FutureBuilder<NewsResponse>(
+        future: _newsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ShimmerEffect();
           } else if (snapshot.hasError) {
             return ShimmerError();
+          } else if (!snapshot.hasData || snapshot.data?.data == null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.article_outlined,
+                    color: KPrimaryColor,
+                    size: 50,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Belum ada berita tersedia",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            );
           } else {
             final news = snapshot.data!.data!;
             return ListView.builder(
@@ -180,6 +219,8 @@ class NewsOutside extends StatelessWidget {
               },
             );
           }
-        });
+        },
+      ),
+    );
   }
 }

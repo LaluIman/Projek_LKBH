@@ -322,49 +322,70 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 25),
                 // News
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Berita terbaru",
-                            style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      FutureBuilder<NewsResponse>(
-                          future: ApiCaller().fetchNews(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return ShimmerEffect();
-                            } else {
-                              final news = snapshot.data!.data!;
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
-                                itemCount: 5,
-                                itemBuilder: (context, index) {
-                                  return NewsItem(news: news[index]);
-                                },
-                              );
-                            }
-                          })
-                    ],
-                  ),
-                )
+                HomeNewsSection()
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HomeNewsSection extends StatefulWidget {
+  const HomeNewsSection({super.key});
+
+  @override
+  State<HomeNewsSection> createState() => _HomeNewsSectionState();
+}
+
+class _HomeNewsSectionState extends State<HomeNewsSection> {
+  late Future<NewsResponse> _newsFuture;
+  
+  @override
+  void initState() {
+    super.initState();
+    _newsFuture = ApiCaller().fetchNews();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(          
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Berita terbaru",
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 10),
+          FutureBuilder<NewsResponse>(
+            future: _newsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return ShimmerEffect();
+              } else if (snapshot.hasError) {
+                return Text("Error: ${snapshot.error}");
+              } else if (!snapshot.hasData || snapshot.data?.data == null) {
+                return Text("No news available");
+              } else {
+                final news = snapshot.data!.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: news.length > 5 ? 5 : news.length,
+                  itemBuilder: (context, index) {
+                    return NewsItem(news: news[index]);
+                  },
+                );
+              }
+            }
+          )
+        ],
       ),
     );
   }
@@ -385,82 +406,104 @@ class HomeShimmer extends StatelessWidget {
           highlightColor: Colors.grey.shade200,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 200,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        width: 300,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 200,
+                          height: 25,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          width: 300,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  padding: const EdgeInsets.all(10),
-                  children: List.generate(
-                      8,
-                      (index) => Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(10)),
-                          )),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ],
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    height: 150,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                          width: 250,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    padding: const EdgeInsets.all(10),
+                    children: List.generate(
+                        8,
+                        (index) => Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(10)),
+                            )),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ), 
+                  Container(
+                          width: 250,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
