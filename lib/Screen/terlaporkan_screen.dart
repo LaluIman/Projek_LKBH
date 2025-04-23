@@ -41,6 +41,6 @@ class TerlaporkanScreen extends StatelessWidget {
           ),
         ),
       ),
-    );;
+    );
   }
 }

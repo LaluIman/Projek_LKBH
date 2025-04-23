@@ -2,11 +2,8 @@ import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/button_consul
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer_error.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/api_caller.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/News/news_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,9 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return data['nama'] != null;
   }
 
-  void _navigateToConsultationTab() {
-    CustomBottomNavbar.navigateToTab(1);
-  }
 
   @override
   Widget build(BuildContext context) {
