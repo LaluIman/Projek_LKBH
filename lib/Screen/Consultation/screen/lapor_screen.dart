@@ -1,7 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LaporScreen extends StatefulWidget {
   static String routeName = "/laporScreen";
@@ -12,17 +20,137 @@ class LaporScreen extends StatefulWidget {
 }
 
 class _LaporScreenState extends State<LaporScreen> {
+  final TextEditingController _reporterController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _reportedController = TextEditingController();
+  final TextEditingController _reportController = TextEditingController();
+  
+  XFile? _ktpImage;
 
-  TextEditingController _reporterController = TextEditingController();
-  TextEditingController _numberController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _reportedController = TextEditingController();
-  TextEditingController _reportController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  void fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (doc.exists) {
+        if (mounted) {
+          setState(() {
+            _reporterController.text = doc['nama'] ?? '';
+            _numberController.text = doc['telepon'] ?? '';
+            _addressController.text = doc['alamat'] ?? '';
+          });
+        }
+      }
+    }
+  }
+
+  Future<Uint8List> compressImage(File file) async {
+    try {
+      final result = await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        minWidth: 800,
+        minHeight: 800,
+        quality: 50,
+      );
+      return result ?? await file.readAsBytes(); // fallback
+    } catch (e) {
+      print("❗Compress Error: $e");
+      return await file.readAsBytes(); // if failed, use original file
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _ktpImage = XFile(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _submitReport() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null || _ktpImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Mohon lengkapi semua data dan upload KTP.")));
+      return;
+    }
+
+    if (_reporterController.text.isEmpty || _numberController.text.isEmpty ||
+        _addressController.text.isEmpty || _reportedController.text.isEmpty ||
+        _reportController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Mohon lengkapi semua data formulir.")));
+      return;
+    }
+
+    try {
+      // Compress image before encoding to base64
+      final ktpCompressed = await compressImage(File(_ktpImage!.path));
+      final ktpBase64 = base64Encode(ktpCompressed);
+
+      await FirebaseFirestore.instance.collection('laporan_kasus').add({
+        'uid': user.uid,
+        'nama_pelapor': _reporterController.text,
+        'telepon': _numberController.text,
+        'alamat': _addressController.text,
+        'nama_terlapor': _reportedController.text,
+        'isi_laporan': _reportController.text,
+        'ktp_image': ktpBase64,
+        'timestamp': FieldValue.serverTimestamp()
+      });
+
+      // Show loading for 3 seconds
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoadingAnimationWidget.inkDrop(color: KPrimaryColor, size: 70),
+              SizedBox(height: 30),
+              Text(
+                "Memproses laporan...",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.none),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await Future.delayed(const Duration(seconds: 3));
+
+      // Close loading dialog and navigate
+      Navigator.pop(context);
+
+      Navigator.pushNamed(context, "/terlaporkan");
+    } catch (e) {
+      print("🔥 ERROR: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal mengirim laporan. Silakan coba lagi.")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         leadingWidth: 100,
         leading: GestureDetector(
           onTap: () {
@@ -56,9 +184,12 @@ class _LaporScreenState extends State<LaporScreen> {
               TextFormField(
                 controller: _reporterController,
                 decoration: InputDecoration(
-                  hintText: "Nama Lengkap Pelapor",
+                  labelText: "Nama Lengkap Pelapor",
                   hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                  prefixIcon: Icon(Icons.person)
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SvgPicture.asset("assets/icons/User Icon.svg"),
+                  )
                 )
               ),
               SizedBox(height: 7,),
@@ -67,48 +198,90 @@ class _LaporScreenState extends State<LaporScreen> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: _numberController,
                 decoration: InputDecoration(
-                  hintText: "Nomor Telepon",
+                  labelText: "Nomor Telepon",
                   hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                  prefixIcon: Icon(Icons.phone)
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SvgPicture.asset("assets/icons/Telepon Icon.svg"),
+                  )
                 )
               ),
               SizedBox(height: 7,),
               TextFormField(
                 controller: _addressController,
                 decoration: InputDecoration(
-                  hintText: "Alamat",
+                  labelText: "Alamat",
                   hintStyle: TextStyle(fontWeight: FontWeight.w500),
                   prefixIcon: Icon(Icons.location_on_rounded)
                 )
               ),
-              SizedBox(height: 7,),
-              Container(
-                width: 383,
-                height: 108,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 235, 235, 235),
-                  borderRadius: BorderRadius.circular(20)
+              SizedBox(height: 20,),
+              Text(
+                "Upload KTP",
+                style: TextStyle(
+                  fontSize: 18, 
+                  color: Colors.black, 
+                  fontWeight: FontWeight.w600
                 ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_photo_alternate, color: Colors.black, size: 40,),
-                      Text("Upload KTP", style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600
-                       ),
-                      ),
-                    ],
+              ),
+              SizedBox(height: 12,),
+              GestureDetector(
+                onTap: _pickImage,
+                child: Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 235, 235, 235),
+                    borderRadius: BorderRadius.circular(20)
                   ),
+                  child: _ktpImage == null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset("assets/images/KTP.png"),
+                            SizedBox(height: 10),
+                            Text(
+                              "Format png, jpg, jpeg",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset("assets/images/KTP true.png"),
+                            SizedBox(height: 10),
+                            Text(
+                              "Foto telah diupload!",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.green,
+                              ),
+                            ),
+                            SizedBox(height: 3),
+                            Text(
+                              "Upload ulang?",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                 ),
               ),
               SizedBox(height: 40,),
               TextFormField(
                 controller: _reportedController,
                 decoration: InputDecoration(
-                  hintText: "Nama Lengkap Yang di lapor",
+                  labelText: "Nama Lengkap Yang di lapor",
                   hintStyle: TextStyle(fontWeight: FontWeight.w500),
                   prefixIcon: Icon(Icons.person)
                 )
@@ -123,11 +296,13 @@ class _LaporScreenState extends State<LaporScreen> {
                 ),
               ),
               SizedBox(height: 30,),
-              DefaultButton(text: "Kirim Laporan", press: (){
-                Navigator.pushNamed(context, "/terlaporkan");
-              }, bgcolor: KPrimaryColor, textColor: Colors.white),
+              DefaultButton(
+                text: "Kirim Laporan", 
+                press: _submitReport, 
+                bgcolor: KPrimaryColor, 
+                textColor: Colors.white
+              ),
               SizedBox(height: 70,),
-
             ],
           ),
         ),
