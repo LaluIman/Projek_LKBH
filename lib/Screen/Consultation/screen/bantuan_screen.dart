@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
@@ -178,31 +179,8 @@ class _BantuanScreenState extends State<BantuanScreen> {
     final selected = Provider.of<ConsultationProvider>(context).selectedConsultation;
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Icon(
-                Icons.arrow_back_ios_new,
-                color: KPrimaryColor,
-                size: 25,
-              ),
-              Text(
-                "Kembali",
-                style: TextStyle(
-                    color: KPrimaryColor, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-        ),
+        leadingWidth: 150,
+        leading: DefaultBackButton()
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -223,12 +201,33 @@ class _BantuanScreenState extends State<BantuanScreen> {
               SizedBox(
                 height: 4,
               ),
-              Text(
-                selected!.name,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: kUnselectedColor,
-                  fontWeight: FontWeight.w600
+               Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 1, color: Colors.grey.shade500)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Text("Jenis konsultasi: ", style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w600
+                          ),),
+                        Text(
+                          selected!.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: KPrimaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               SizedBox(

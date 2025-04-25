@@ -39,12 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 10),
                 const Text(
                   "Selamat datang di",
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 Text(
                   "Konsulhukum",
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 28,
                     fontWeight: FontWeight.w800,
                     color: KPrimaryColor,
                     height: 0,
@@ -55,15 +55,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(color: KGray),
                 ),
                 const SizedBox(height: 15),
-                Image.asset("assets/images/Justice masbro.png",
+                Image.asset("assets/images/login_image.png",
                     fit: BoxFit.cover),
                 Container(
                   padding: const EdgeInsets.only(bottom: 70),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
                   ),
                   child: Padding(
@@ -92,7 +92,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _emailController.text,
                                     _pwController.text,
                                   );
-                                  // Tampilkan loading selama 3 detik
                                   showDialog(
                                     context: context,
                                     barrierDismissible: false,

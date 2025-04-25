@@ -52,7 +52,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             'alamat_domisili': _alamatDomisiliController.text.trim(),
             'nik': _nikController.text.trim(),
           });
-          Navigator.pushReplacementNamed(context, '/success_login');
+          Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

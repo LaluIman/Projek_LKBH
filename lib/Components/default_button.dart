@@ -25,7 +25,7 @@ class DefaultButton extends StatelessWidget {
           elevation: 0,
           backgroundColor: bgcolor,
           minimumSize: Size(double.infinity, 56),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

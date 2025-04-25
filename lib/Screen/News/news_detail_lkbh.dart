@@ -1,4 +1,6 @@
 import 'dart:convert';
+//
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -27,24 +29,9 @@ class NewsDetailLkbh extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 150,
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        title: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            children: [
-              Icon(Icons.arrow_back_ios),
-              Text(
-                "Kembali",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              )
-            ],
-          ),
-        ),
+        leading: DefaultBackButton()
       ),
       backgroundColor: Colors.white,
       body: SafeArea(

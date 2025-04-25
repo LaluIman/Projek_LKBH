@@ -19,12 +19,12 @@ class TerjadwalkanScreen extends StatelessWidget {
               children: [
                 Text("Terjadwalkan!", style: TextStyle(
                   fontSize: 30,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                   color: KPrimaryColor,
                 ),),
-                SizedBox(height: 50,),
-                Image.asset("assets/images/Terjadwalkan.png"),
-                SizedBox(height: 50,),
+                SizedBox(height: 10,),
+                Image.asset("assets/images/Terjadwalkan.png", fit: BoxFit.cover, width: 300,),
+                SizedBox(height: 20,),
                 Text("Kami akan menghubungi kamu melalui \n Whatsapp", textAlign: TextAlign.center, style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,

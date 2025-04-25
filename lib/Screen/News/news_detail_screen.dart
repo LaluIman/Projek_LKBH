@@ -1,3 +1,5 @@
+//
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,24 +17,9 @@ class NewsDetailscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leadingWidth: 150,
           backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          title: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.arrow_back_ios),
-                Text(
-                  "Kembali",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                )
-              ],
-            ),
-          ),
+          leading: DefaultBackButton(),
           actions: [
             Padding(
               padding: EdgeInsets.only(left: 17),
