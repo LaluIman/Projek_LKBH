@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/button_consulta.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
@@ -10,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -242,6 +244,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
+                                  // Simpan pilihan ke Provider
+                                  Provider.of<ConsultationProvider>(context, listen: false).setSelectedConsultation(consultationType);
                                   showModalBottomSheet(
                                     context: context,
                                     builder: (BuildContext context) {
