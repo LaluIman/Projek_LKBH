@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class LaporScreen extends StatefulWidget {
   static String routeName = "/laporScreen";
@@ -80,6 +83,7 @@ class _LaporScreenState extends State<LaporScreen> {
 
   Future<void> _submitReport() async {
     final user = FirebaseAuth.instance.currentUser;
+    final selected = Provider.of<ConsultationProvider>(context, listen: false).selectedConsultation;
 
     if (user == null || _ktpImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -95,6 +99,14 @@ class _LaporScreenState extends State<LaporScreen> {
       return;
     }
 
+
+    if (selected == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Layanan belum dipilih."))
+      );
+      return;
+    }
+
     try {
       // Compress image before encoding to base64
       final ktpCompressed = await compressImage(File(_ktpImage!.path));
@@ -105,6 +117,7 @@ class _LaporScreenState extends State<LaporScreen> {
         'nama_pelapor': _reporterController.text,
         'telepon': _numberController.text,
         'alamat': _addressController.text,
+        'layanan': selected.name, 
         'nama_terlapor': _reportedController.text,
         'isi_laporan': _reportController.text,
         'ktp_image': ktpBase64,
@@ -149,23 +162,11 @@ class _LaporScreenState extends State<LaporScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final selected = Provider.of<ConsultationProvider>(context).selectedConsultation;
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 6,),
-              Icon(Icons.arrow_back_ios_new, color: KPrimaryColor, size: 25,),
-              Text("Kembali", style: TextStyle(color: KPrimaryColor, fontWeight: FontWeight.w600),),
-            ],
-          ),
-        ),
+        leadingWidth: 150,
+        leading: DefaultBackButton()
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -179,6 +180,35 @@ class _LaporScreenState extends State<LaporScreen> {
                 color: KPrimaryColor,
                 fontWeight: FontWeight.w600,
               ),),
+             Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 1, color: Colors.grey.shade500)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Text("Jenis konsultasi: ", style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w600
+                          ),),
+                        Text(
+                          selected!.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: KPrimaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               Text("Isi semua formulir dibawah ini sepeti yang di minta."),
               SizedBox(height: 40,),
               TextFormField(

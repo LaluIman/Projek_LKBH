@@ -1,3 +1,5 @@
+//
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/error_message_form.dart';
 import 'package:aplikasi_lkbh_unmul/error_message.dart';
@@ -29,31 +31,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        leadingWidth: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Icon(Icons.arrow_back_ios_new, color: KPrimaryColor),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                "Kembali",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: KPrimaryColor,
-                    fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
-        ),
+        leadingWidth: 150,
+        leading: DefaultBackButton(),
       ),
       body: SafeArea(
         child: SizedBox(
@@ -65,10 +44,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   SizedBox(height: 20),
                   Text(
-                    "Daftar di Konsulhukum",
+                    "Daftar akun",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
                       color: KPrimaryColor,
                     ),
                   ),
@@ -275,3 +254,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+
+

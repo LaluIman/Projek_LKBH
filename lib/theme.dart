@@ -7,7 +7,7 @@ themeData(){
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: KBg,
     appBarTheme: AppBarTheme(
-      color: KBg
+      color: KBg,
     ),
     //inputdecoration
     inputDecorationTheme: inputDecoration()
@@ -17,7 +17,7 @@ themeData(){
 InputDecorationTheme inputDecoration(){
    var outlineInputBorder = const OutlineInputBorder(
           borderSide: BorderSide(width: 0, color: Colors.transparent),
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
           gapPadding: 5
         );
     return InputDecorationTheme(

@@ -41,17 +41,19 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
     setState(() => _isSending = true);
     try {
       await user.sendEmailVerification();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Link verifikasi telah dikirim ke email anda"),
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(16),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text("Link verifikasi telah dikirim ke email anda"),
+      //     behavior: SnackBarBehavior.floating,
+      //     margin: EdgeInsets.all(16),
+      //   ),
+      // );
+      print("verifikasi terkirim");
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Gagal mengirim verifikasi: $e")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("Gagal mengirim verifikasi: $e")),
+      // );
+      print(e);
     } finally {
       setState(() => _isSending = false);
     }

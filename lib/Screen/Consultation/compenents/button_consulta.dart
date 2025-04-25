@@ -1,7 +1,6 @@
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ButtonConsultan extends StatelessWidget {
   const ButtonConsultan({
@@ -51,27 +50,27 @@ class ButtonContainer extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
-        height: 98,
-        width: 380,
+        height: 120,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: KBg,
-          borderRadius: BorderRadius.circular(16)
+          borderRadius: BorderRadius.circular(10)
         ),
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Container(
-                width: 66,
-                height: 66,
+                width: 100,
+                height: 100,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(233, 233, 233, 1),
-                  borderRadius: BorderRadius.circular(16)
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10)
                 ),
                 child: 
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: SvgPicture.asset(buttonIcon, 
+                  child: Image.asset(buttonIcon, 
                   ),
                 ),
               ),
@@ -86,13 +85,13 @@ class ButtonContainer extends StatelessWidget {
                     Text(buttonName, style: TextStyle(
                       color: KPrimaryColor,
                       fontSize: 24,
-                      fontWeight: FontWeight.w900
+                      fontWeight: FontWeight.w700
                       ),
                     ),
                 
                     Text(buttonDesc, style: TextStyle(
-                       fontSize: 11,
-                       fontWeight: FontWeight.w500
+                       fontSize: 12,
+                       fontWeight: FontWeight.w400
                       ),
                      
                     )

@@ -1,3 +1,4 @@
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
@@ -12,31 +13,8 @@ class ProfilLkbhScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        leadingWidth: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Icon(Icons.arrow_back_ios_new, color: KPrimaryColor),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                "Kembali",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: KPrimaryColor,
-                    fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
-        ),
+        leadingWidth: 150,
+        leading: DefaultBackButton()
       ),
       body: SafeArea(
         child: SizedBox(
@@ -70,7 +48,7 @@ class ProfilLkbhScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 30,),
                   ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(10),
                       child: Image.asset("assets/images/fotolkbh.jpg")),
                   SizedBox(height: 30,),
                   Text(

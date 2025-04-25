@@ -1,7 +1,6 @@
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item_lkbh.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer_error.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/api_caller.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
@@ -115,7 +114,7 @@ class NewsLKBH extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return ShimmerEffect();
         } else if (snapshot.hasError) {
-          return ShimmerError();
+          return ShimmerEffect();
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(
             child: Column(
@@ -189,7 +188,7 @@ class _NewsOutsideState extends State<NewsOutside> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ShimmerEffect();
           } else if (snapshot.hasError) {
-            return ShimmerError();
+            return ShimmerEffect();
           } else if (!snapshot.hasData || snapshot.data?.data == null) {
             return Center(
               child: Column(

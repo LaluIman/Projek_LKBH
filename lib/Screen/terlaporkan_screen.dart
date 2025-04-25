@@ -18,11 +18,11 @@ class TerlaporkanScreen extends StatelessWidget {
               children: [
                 Text("Terlaporkan!", style: TextStyle(
                   fontSize: 30,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                   color: KPrimaryColor,
                 ),),
                 SizedBox(height: 20,),
-                Image.asset("assets/images/terlaporkan.png"),
+                Image.asset("assets/images/terlaporkan.png", fit: BoxFit.cover, width: 300,),
                 SizedBox(height: 20,),
                 Text("Kamu Akan di kabari oleh LKBH melewati \n Whatsapp", textAlign: TextAlign.center, style: TextStyle(
                   fontSize: 17,

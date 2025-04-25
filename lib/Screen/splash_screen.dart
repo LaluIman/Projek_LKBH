@@ -13,21 +13,34 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late Timer _timer;
+
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5),(){
-      final user = FirebaseAuth.instance.currentUser;
+    _timer = Timer(Duration(seconds: 5), () {
+      // Check if the widget is still mounted before using context
+      if (mounted) {
+        final user = FirebaseAuth.instance.currentUser;
 
-      if (user != null) {
-        // Sudah login → ke halaman himbauan
-        Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
-      } else {
-        // Belum login → ke halaman login
-        Navigator.pushReplacementNamed(context, '/himbauan');
+        if (user != null) {
+          // Sudah login → ke halaman himbauan
+          Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
+        } else {
+          // Belum login → ke halaman login
+          Navigator.pushReplacementNamed(context, '/login');
+        }
       }
     });
   }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               "LKBH FH Universitas Mulawarman",
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
@@ -70,14 +83,6 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("assets/images/logo unmul.png", width: 50, height: 50),
-                SizedBox(width: 10,),
-                Image.asset("assets/images/logo lkbh.png", width: 50, height: 50),
-              ],
-            ),
             SizedBox(height: 10,),
             Text(
               "LKBH FH Universitas Mulawarman terakreditasi B \n berdasarkan Keputusan Menteri Hukum Republik Indonesia \n Nomor: M.HH-6.HN.04.03 Tahun 2024",

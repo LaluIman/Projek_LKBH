@@ -1,3 +1,4 @@
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_faq/flutter_easy_faq.dart';
@@ -11,31 +12,8 @@ class QnaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        leadingWidth: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Icon(Icons.arrow_back_ios_new, color: KPrimaryColor),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                "Kembali",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: KPrimaryColor,
-                    fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
-        ),
+        leadingWidth: 150,
+        leading: DefaultBackButton()
       ),
       body: SingleChildScrollView(
         child: Padding(

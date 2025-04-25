@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? userName;
   int _currentIndex = 0;
   Future<void>? _profileFuture;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -57,12 +59,18 @@ class _HomeScreenState extends State<HomeScreen> {
           if (mounted) {
             setState(() {
               userName = data['nama'];
+              _isLoading = false;
             });
           }
         }
       }
     } catch (e) {
       print('Error checking profile: $e');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -73,141 +81,95 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: _profileFuture,
-        builder: (context, snapshot) {
-          // if (snapshot.connectionState == ConnectionState.waiting) {
-          //   return HomeShimmer();
-          // }
-
-          return SafeArea(
-            child: SizedBox(
-              width: double.infinity,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 25),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 25),
+                // User display with shimmer effect when loading
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Selamat datang 👋",
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.w700,
-                                    color: KPrimaryColor,
-                                  ),
-                                ),
-                                Text(
-                                  userName ?? "User",
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              "Selamat datang 👋",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: KPrimaryColor,
+                              ),
                             ),
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade400,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Icon(
-                                        Icons.notifications,
-                                        color: Colors.white,
-                                      ),
+                            _isLoading
+                                ? _buildUsernameShimmer()
+                                : Text(
+                                    userName ?? "User",
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                      overflow: TextOverflow.fade,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade400,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Icon(
-                                        Icons.chat_bubble,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
                           ],
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    // Banner
-                    CarouselSlider(
-                      items: [
-                        Image.asset("assets/images/Banner.png"),
-                        Image.asset(
-                          "assets/images/banner 2.png",
-                        ),
-                        // Image.asset("assets/images/Banner.png"),
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade500,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/Notif.svg",
+                                    width: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade500,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/List Chat.svg",
+                                    width: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
-                      options: CarouselOptions(
-                        height: 200,
-                        viewportFraction: 0.9,
-                        padEnds: true,
-                        enlargeCenterPage: true,
-                        scrollDirection: Axis.horizontal,
-                        enableInfiniteScroll: false,
-                        reverse: false,
-                        autoPlay: true,
-                        autoPlayInterval: const Duration(seconds: 5),
-                        autoPlayAnimationDuration:
-                            const Duration(milliseconds: 1000),
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            _currentIndex = index;
-                          });
-                        },
-                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [0, 1].map((index) {
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.ease,
-                          width: _currentIndex == index ? 25 : 9,
-                          height: 9,
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: KPrimaryColor.withOpacity(
-                                _currentIndex == index ? 0.9 : 0.4),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    SizedBox(height: 25),
-                    // Consultation
+                  ),
+                ),
+                const SizedBox(height: 15),
+                // Banner with shimmer effect when loading
+                _isLoading ? _buildCarouselShimmer() : _buildCarousel(),
+                SizedBox(height: 25),
+                // Consultation
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
@@ -245,7 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      // Simpan pilihan ke Provider
                                       Provider.of<ConsultationProvider>(context,
                                               listen: false)
                                           .setSelectedConsultation(
@@ -255,7 +216,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (BuildContext context) {
                                           return SizedBox(
                                             width: double.infinity,
-                                            height: 400,
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
@@ -282,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                                BorderRadius.circular(10),
                                           ),
                                         ),
                                         Positioned(
@@ -330,16 +290,94 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 25),
-                    // News
-                    HomeNewsSection()
-                  ],
-                ),
-              ),
+                SizedBox(height: 25),
+                // News section (using its own shimmer)
+                HomeNewsSection()
+              ],
             ),
-          );
-        },
+          ),
+        ),
       ),
+    );
+  }
+
+  // Shimmer effect for username only
+  Widget _buildUsernameShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        width: 150,
+        height: 23,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    );
+  }
+
+  // Shimmer effect for carousel
+  Widget _buildCarouselShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  // Regular carousel
+  Widget _buildCarousel() {
+    return Column(
+      children: [
+        CarouselSlider(
+          items: [
+            Image.asset("assets/images/Banner.png"),
+            Image.asset("assets/images/banner 2.png"),
+          ],
+          options: CarouselOptions(
+            height: 200,
+            viewportFraction: 0.9,
+            padEnds: true,
+            enlargeCenterPage: true,
+            scrollDirection: Axis.horizontal,
+            enableInfiniteScroll: false,
+            reverse: false,
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 5),
+            autoPlayAnimationDuration: const Duration(milliseconds: 1000),
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [0, 1].map((index) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.ease,
+              width: _currentIndex == index ? 25 : 9,
+              height: 9,
+              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color:
+                    KPrimaryColor.withOpacity(_currentIndex == index ? 0.9 : 0.4),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
@@ -353,7 +391,7 @@ class HomeNewsSection extends StatefulWidget {
 
 class _HomeNewsSectionState extends State<HomeNewsSection> {
   late Future<NewsResponse> _newsFuture;
-
+  
   @override
   void initState() {
     super.initState();
@@ -362,7 +400,7 @@ class _HomeNewsSectionState extends State<HomeNewsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Padding(          
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,149 +414,29 @@ class _HomeNewsSectionState extends State<HomeNewsSection> {
           ),
           SizedBox(height: 10),
           FutureBuilder<NewsResponse>(
-              future: _newsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return ShimmerEffect();
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else if (!snapshot.hasData || snapshot.data?.data == null) {
-                  return Text("No news available");
-                } else {
-                  final news = snapshot.data!.data!;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: news.length > 5 ? 5 : news.length,
-                    itemBuilder: (context, index) {
-                      return NewsItem(news: news[index]);
-                    },
-                  );
-                }
-              })
+            future: _newsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return ShimmerEffect();
+              } else if (snapshot.hasError) {
+                return ShimmerEffect();
+              } else if (!snapshot.hasData || snapshot.data?.data == null) {
+                return Text("No news available");
+              } else {
+                final news = snapshot.data!.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: news.length > 5 ? 5 : news.length,
+                  itemBuilder: (context, index) {
+                    return NewsItem(news: news[index]);
+                  },
+                );
+              }
+            }
+          )
         ],
       ),
     );
   }
 }
-
-// class HomeShimmer extends StatelessWidget {
-//   const HomeShimmer({
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: SizedBox(
-//         width: double.infinity,
-//         child: Shimmer.fromColors(
-//           baseColor: Colors.grey.shade300,
-//           highlightColor: Colors.grey.shade200,
-//           child: Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 20),
-//             child: SingleChildScrollView(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   const SizedBox(height: 25),
-//                   SizedBox(
-//                     width: double.infinity,
-//                     child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Container(
-//                           width: 200,
-//                           height: 25,
-//                           decoration: BoxDecoration(
-//                               color: Colors.grey.shade200,
-//                               borderRadius: BorderRadius.circular(10)),
-//                         ),
-//                         SizedBox(
-//                           height: 5,
-//                         ),
-//                         Container(
-//                           width: 300,
-//                           height: 40,
-//                           decoration: BoxDecoration(
-//                               color: Colors.grey.shade200,
-//                               borderRadius: BorderRadius.circular(10)),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   SizedBox(
-//                     height: 30,
-//                   ),
-//                   Container(
-//                     height: 150,
-//                     decoration: BoxDecoration(
-//                         color: Colors.grey.shade200,
-//                         borderRadius: BorderRadius.circular(10)),
-//                   ),
-//                   SizedBox(
-//                     height: 30,
-//                   ),
-//                   Container(
-//                           width: 250,
-//                           height: 30,
-//                           decoration: BoxDecoration(
-//                               color: Colors.grey.shade200,
-//                               borderRadius: BorderRadius.circular(10)),
-//                         ),
-//                   SizedBox(
-//                     height: 20,
-//                   ),
-//                   GridView.count(
-//                     shrinkWrap: true,
-//                     crossAxisCount: 4,
-//                     crossAxisSpacing: 20,
-//                     mainAxisSpacing: 20,
-//                     padding: const EdgeInsets.all(10),
-//                     children: List.generate(
-//                         8,
-//                         (index) => Container(
-//                               width: 100,
-//                               height: 100,
-//                               decoration: BoxDecoration(
-//                                   color: Colors.grey.shade100,
-//                                   borderRadius: BorderRadius.circular(10)),
-//                             )),
-//                   ),
-//                   SizedBox(
-//                     height: 25,
-//                   ), 
-//                   Container(
-//                           width: 250,
-//                           height: 30,
-//                           decoration: BoxDecoration(
-//                               color: Colors.grey.shade200,
-//                               borderRadius: BorderRadius.circular(10)),
-//                         ),
-//                   SizedBox(
-//                     height: 20,
-//                   ),
-//                   Container(
-//                     height: 120,
-//                     decoration: BoxDecoration(
-//                         color: Colors.grey.shade200,
-//                         borderRadius: BorderRadius.circular(10)),
-//                   ),
-//                   SizedBox(
-//                     height: 10,
-//                   ),
-//                   Container(
-//                     height: 120,
-//                     decoration: BoxDecoration(
-//                         color: Colors.grey.shade200,
-//                         borderRadius: BorderRadius.circular(10)),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

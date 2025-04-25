@@ -1,5 +1,6 @@
+//
+import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/read%20data/get_user_data.dart';
-import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,26 +21,8 @@ class _DataDiriScreenState extends State<DataDiriScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        leadingWidth: 100,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Row(
-            children: const [
-              SizedBox(width: 6),
-              Icon(Icons.arrow_back_ios_new, color: KPrimaryColor),
-              SizedBox(width: 3),
-              Text(
-                "Kembali",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: KPrimaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
+        leadingWidth: 150,
+        leading: DefaultBackButton()
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
