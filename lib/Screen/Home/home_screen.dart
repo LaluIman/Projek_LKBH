@@ -12,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -80,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // if (snapshot.connectionState == ConnectionState.waiting) {
           //   return HomeShimmer();
           // }
-          
+
           return SafeArea(
             child: SizedBox(
               width: double.infinity,
@@ -165,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     CarouselSlider(
                       items: [
                         Image.asset("assets/images/Banner.png"),
-                        Image.asset("assets/images/banner 2.png",),
+                        Image.asset(
+                          "assets/images/banner 2.png",
+                        ),
                         // Image.asset("assets/images/Banner.png"),
                       ],
                       options: CarouselOptions(
@@ -207,7 +208,128 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 25),
                     // Consultation
-                    
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Jenis Konsultasi",
+                                style: TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              childAspectRatio: 1,
+                              crossAxisSpacing: 0,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemCount: 8,
+                            itemBuilder: (context, index) {
+                              final consultationType =
+                                  ConsultationType.listConsultationType[index];
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Simpan pilihan ke Provider
+                                      Provider.of<ConsultationProvider>(context,
+                                              listen: false)
+                                          .setSelectedConsultation(
+                                              consultationType);
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return SizedBox(
+                                            width: double.infinity,
+                                            height: 400,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [ButtonConsultan()],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          width: 66,
+                                          height: 66,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 9,
+                                          left: 8,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: SvgPicture.asset(
+                                              consultationType.icon,
+                                              width: 30,
+                                              fit: BoxFit.contain,
+                                              allowDrawingOutsideViewBox: true,
+                                              errorBuilder:
+                                                  (context, error, StackTrace) {
+                                                print(
+                                                    "SVG Loading error: $error");
+                                                return Icon(Icons.error);
+                                              },
+                                              placeholderBuilder: (context) =>
+                                                  Icon(Icons.image),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    consultationType.name,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 25),
                     // News
                     HomeNewsSection()
@@ -231,7 +353,7 @@ class HomeNewsSection extends StatefulWidget {
 
 class _HomeNewsSectionState extends State<HomeNewsSection> {
   late Future<NewsResponse> _newsFuture;
-  
+
   @override
   void initState() {
     super.initState();
@@ -240,7 +362,7 @@ class _HomeNewsSectionState extends State<HomeNewsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(          
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,27 +376,26 @@ class _HomeNewsSectionState extends State<HomeNewsSection> {
           ),
           SizedBox(height: 10),
           FutureBuilder<NewsResponse>(
-            future: _newsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return ShimmerEffect();
-              } else if (snapshot.hasError) {
-                return Text("Error: ${snapshot.error}");
-              } else if (!snapshot.hasData || snapshot.data?.data == null) {
-                return Text("No news available");
-              } else {
-                final news = snapshot.data!.data!;
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: news.length > 5 ? 5 : news.length,
-                  itemBuilder: (context, index) {
-                    return NewsItem(news: news[index]);
-                  },
-                );
-              }
-            }
-          )
+              future: _newsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ShimmerEffect();
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (!snapshot.hasData || snapshot.data?.data == null) {
+                  return Text("No news available");
+                } else {
+                  final news = snapshot.data!.data!;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: news.length > 5 ? 5 : news.length,
+                    itemBuilder: (context, index) {
+                      return NewsItem(news: news[index]);
+                    },
+                  );
+                }
+              })
         ],
       ),
     );
