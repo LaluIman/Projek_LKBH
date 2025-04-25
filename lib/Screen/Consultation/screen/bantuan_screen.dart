@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,12 +11,14 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class BantuanScreen extends StatefulWidget {
   static String routeName = "/bantuanScreen";
   const BantuanScreen({
     super.key,
   });
+
 
   @override
   State<BantuanScreen> createState() => _BantuanScreenState();
@@ -84,22 +87,33 @@ class _BantuanScreenState extends State<BantuanScreen> {
 
   Future<void> _submitData() async {
     final user = FirebaseAuth.instance.currentUser;
+    final selected = Provider.of<ConsultationProvider>(context, listen: false).selectedConsultation;
 
     if (user == null || _ktpImage == null || _sktmImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Mohon lengkapi semua data dan upload dokumen.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Mohon lengkapi semua data dan upload dokumen."))
+      );
       return;
     }
 
     if (_days == null || _times == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Silakan pilih hari dan waktu janji temu.")));
+        SnackBar(content: Text("Silakan pilih hari dan waktu janji temu."))
+      );
       return;
     }
 
     if (_namaController.text.isEmpty || _teleponController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Nama dan nomor telepon wajib diisi.")));
+        SnackBar(content: Text("Nama dan nomor telepon wajib diisi."))
+      );
+      return;
+    }
+
+    if (selected == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Layanan belum dipilih."))
+      );
       return;
     }
 
@@ -111,15 +125,13 @@ class _BantuanScreenState extends State<BantuanScreen> {
       final ktpBase64 = base64Encode(ktpCompressed);
       final sktmBase64 = base64Encode(sktmCompressed);
 
-      // // Cek panjang base64
-      // print("DEBUG: Panjang base64 KTP: ${ktpBase64.length}, SKTM: ${sktmBase64.length}");
-
       await FirebaseFirestore.instance.collection('bantuan_hukum').add({
         'uid': user.uid,
         'nama': _namaController.text,
         'telepon': _teleponController.text,
         'hari': _days,
         'waktu': _times,
+        'layanan': selected.name, // ✅ Tambahkan nama layanan di sini
         'ktp_image': ktpBase64,
         'sktm_image': sktmBase64,
         'timestamp': FieldValue.serverTimestamp()
@@ -134,16 +146,14 @@ class _BantuanScreenState extends State<BantuanScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               LoadingAnimationWidget.inkDrop(color: KPrimaryColor, size: 70),
-              SizedBox(
-                height: 30,
-              ),
+              SizedBox(height: 30),
               Text(
                 "Tunggu sebentar...",
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    decoration: TextDecoration.none),
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.none),
               ),
             ],
           ),
@@ -154,17 +164,18 @@ class _BantuanScreenState extends State<BantuanScreen> {
 
       // Tutup loading dan navigasi ke halaman berikutnya
       Navigator.pop(context);
-
       Navigator.pushNamed(context, "/terjadwalkan");
     } catch (e) {
       print("🔥 ERROR: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal mengirim data. Silakan coba lagi.")));
+        SnackBar(content: Text("Gagal mengirim data. Silakan coba lagi."))
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final selected = Provider.of<ConsultationProvider>(context).selectedConsultation;
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 100,
@@ -206,7 +217,19 @@ class _BantuanScreenState extends State<BantuanScreen> {
                 style: TextStyle(
                     fontSize: 24,
                     color: KPrimaryColor,
-                    fontWeight: FontWeight.w700),
+                    fontWeight: FontWeight.w700
+                ),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Text(
+                selected!.name,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: kUnselectedColor,
+                  fontWeight: FontWeight.w600
+                ),
               ),
               SizedBox(
                 height: 7,

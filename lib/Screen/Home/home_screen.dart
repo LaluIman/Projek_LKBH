@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/button_consulta.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
@@ -10,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -205,120 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 25),
                     // Consultation
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Jenis Konsultasi",
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              childAspectRatio: 1,
-                              crossAxisSpacing: 0,
-                              mainAxisSpacing: 10,
-                            ),
-                            itemCount: 8,
-                            itemBuilder: (context, index) {
-                              final consultationType =
-                                  ConsultationType.listConsultationType[index];
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return SizedBox(
-                                            width: double.infinity,
-                                            height: 400,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [ButtonConsultan()],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          width: 66,
-                                          height: 66,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 9,
-                                          left: 8,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: SvgPicture.asset(
-                                              consultationType.icon,
-                                              width: 30,
-                                              fit: BoxFit.contain,
-                                              allowDrawingOutsideViewBox: true,
-                                              errorBuilder:
-                                                  (context, error, StackTrace) {
-                                                print("SVG Loading error: $error");
-                                                return Icon(Icons.error);
-                                              },
-                                              placeholderBuilder: (context) =>
-                                                  Icon(Icons.image),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    consultationType.name,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  )
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    
                     SizedBox(height: 25),
                     // News
                     HomeNewsSection()
