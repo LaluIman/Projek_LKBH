@@ -9,6 +9,7 @@ import 'package:aplikasi_lkbh_unmul/Screen/Account/account_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/register_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/verify_account_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/bantuan_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/chat_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/lapor_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/upload_ktp_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
@@ -47,6 +48,8 @@ final Map<String, WidgetBuilder> routes = {
   UploadKtpScreen.routeName: (context) => UploadKtpScreen(),
   BantuanScreen.routeName:(context) => BantuanScreen(),
   LaporScreen.routeName: (context) => LaporScreen(),
+  // ChatScreen.routeName: (context) => ChatScreen(),
+  
 
   EditDataDiriScreen.routeName: (context) => EditDataDiriScreen(
     documentId: ModalRoute.of(context)!.settings.arguments as String,
