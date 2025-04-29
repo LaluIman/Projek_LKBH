@@ -87,10 +87,9 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
           .collection('chat_konsultasi')
           .doc(currentUserId)
           .collection('problem_user')
-          .add({
-        'problem_user': problemUser,
-        'uploadAt': FieldValue.serverTimestamp(),
-      });
+          .doc();
+
+          
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Berhasil terkirim!"))
