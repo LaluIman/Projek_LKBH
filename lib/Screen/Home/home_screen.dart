@@ -124,10 +124,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(context, "/notificationScreen");
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade500,
+                                  color: Colors.grey.shade400,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Padding(
@@ -146,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {},
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade500,
+                                  color: Colors.grey.shade400,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Padding(
