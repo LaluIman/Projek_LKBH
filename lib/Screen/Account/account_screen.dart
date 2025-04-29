@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
@@ -7,6 +9,7 @@ import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -23,27 +26,28 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   final auth = AuthService();
   String? userName;
+  String? profileImage; // To store the base64 image
   bool _isLoading = true;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    getUserName();
+    getUserData();
   }
 
-  Future<void> getUserName() async {
+   Future<void> getUserData() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         String uid = user.uid;
         DocumentSnapshot userDoc =
             await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-        // Check if widget is still mounted before calling setState
         if (mounted) {
           if (userDoc.exists) {
             setState(() {
               userName = userDoc['nama'];
+              profileImage = userDoc['profileImage'];
               _isLoading = false;
             });
           } else {
@@ -71,6 +75,79 @@ class _AccountScreenState extends State<AccountScreen> {
     }
   }
 
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 500,
+        maxHeight: 500,
+        imageQuality: 70, // Compress to reduce file size
+      );
+
+      if (pickedFile != null) {
+        // Show loading dialog
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LoadingAnimationWidget.inkDrop(color: KPrimaryColor, size: 70),
+                SizedBox(height: 20),
+                Text(
+                  "Menyimpan foto profil...",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+        final bytes = await File(pickedFile.path).readAsBytes();
+        final base64Image = base64Encode(bytes);
+        await saveProfileImage(base64Image);
+        if (mounted) Navigator.pop(context);
+        if (mounted) {
+          setState(() {
+            profileImage = base64Image;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      // Close loading dialog if open
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memilih foto: $e')),
+      );
+    }
+  }
+
+  Future<void> saveProfileImage(String base64Image) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'profileImage': base64Image,
+        });
+      }
+    } catch (e) {
+      print('Error saving profile image: $e');
+      throw e; // Rethrow to be caught by calling function
+    }
+  }
+
   Widget _buildProfilePicShimmer() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
@@ -79,10 +156,96 @@ class _AccountScreenState extends State<AccountScreen> {
         height: 130,
         width: 130,
         decoration: BoxDecoration(
-            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-            shape: BoxShape.circle),
+          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+          shape: BoxShape.circle,
+        ),
       ),
     );
+  }
+
+  Widget _buildProfileImage() {
+    if (profileImage != null && profileImage!.isNotEmpty) {
+      // If we have a base64 image
+      return GestureDetector(
+        onTap: pickImage,
+        child: Stack(
+          children: [
+            Container(
+              height: 130,
+              width: 130,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: MemoryImage(base64Decode(profileImage!)),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: KPrimaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Fallback to initial with first letter
+      return GestureDetector(
+        onTap: pickImage,
+        child: Stack(
+          children: [
+            Container(
+              height: 130,
+              width: 130,
+              decoration: BoxDecoration(
+                color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  userName != null && userName!.isNotEmpty
+                      ? userName![0].toUpperCase()
+                      : "?",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: KPrimaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget _buildUsernameShimmer() {
@@ -131,32 +294,17 @@ class _AccountScreenState extends State<AccountScreen> {
                 SizedBox(
                   height: 30,
                 ),
-                _isLoading ? _buildProfilePicShimmer() :
-                Container(
-                  height: 130,
-                  width: 130,
-                  decoration: BoxDecoration(
-                      color: Colors
-                          .primaries[Random().nextInt(Colors.primaries.length)],
-                      shape: BoxShape.circle),
-                  child: Center(
-                    child: Text(
-                      userName != null && userName!.isNotEmpty
-                          ? userName![0].toUpperCase()
-                          : "?",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
+                _isLoading 
+                  ? _buildProfilePicShimmer() 
+                  : _buildProfileImage(),
                 SizedBox(
                   height: 10,
                 ),
                 _isLoading
                     ? _buildUsernameShimmer()
                     : Text(
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
                         userName ?? "Nama Pengguna",
                         style: TextStyle(
                           fontSize: 20,
@@ -169,7 +317,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         auth.getCurrentUser()?.email?.toString() ??
                             "Email tidak tersedia",
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

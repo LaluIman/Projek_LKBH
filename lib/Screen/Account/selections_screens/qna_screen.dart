@@ -36,40 +36,38 @@ class QnaScreen extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              EasyFaq(
-                  borderRadius: BorderRadius.circular(10),
-                  backgroundColor: Colors.white,
-                  question: "Apa itu LKBH?",
-                  answer:
-                      "LKBH adalah singkatan dari Lembaga Konsultasi dan Bantuan Hukum. Lembaga ini adalah wadah pengadian kepada masyarakat yang dibentuk oleh Fakultas Hukum Perguruan Tinggi. Lembaga ini memberikan layanan hukum berupa konsultasi hukum dan bantuan/pendampingan hukum secara cuma-cuma kepada masyarakat (yang mungkin tidak mampu membayar jasa hukum konvensional)"),
-              SizedBox(
-                height: 10,
-              ),
-              EasyFaq(
-                  borderRadius: BorderRadius.circular(10),
-                  backgroundColor: Colors.white,
-                  question: "Siapa kami?",
-                  answer: "LKBH Fakultas Hukum Universitas Mulawarman"),
-              SizedBox(
-                height: 10,
-              ),
-              EasyFaq(
-                  borderRadius: BorderRadius.circular(10),
-                  backgroundColor: Colors.white,
-                  question: "Siapa kami?",
-                  answer: "LKBH Fakultas Hukum Universitas Mulawarman"),
-               SizedBox(
-                height: 10,
-              ),
-              EasyFaq(
-                  borderRadius: BorderRadius.circular(10),
-                  backgroundColor: Colors.white,
-                  question: "Siapa kami?",
-                  answer: "LKBH Fakultas Hukum Universitas Mulawarman"),
+              CardFAQ(question: "Apa itu LKBH?", answer: "LKBH adalah singkatan dari Lembaga Konsultasi dan Bantuan Hukum. Lembaga ini adalah wadah pengadian kepada masyarakat yang dibentuk oleh Fakultas Hukum Perguruan Tinggi. Lembaga ini memberikan layanan hukum berupa konsultasi hukum dan bantuan/pendampingan hukum secara cuma-cuma kepada masyarakat (yang mungkin tidak mampu membayar jasa hukum konvensional)"),
+              CardFAQ(question: "Cara lapor kasus", answer: "LKBH adalah singkatan dari Lembaga Konsultasi dan Bantuan Hukum. Lembaga ini adalah wadah pengadian kepada masyarakat yang dibentuk oleh Fakultas Hukum Perguruan Tinggi. Lembaga ini memberikan layanan hukum berupa konsultasi hukum dan bantuan/pendampingan hukum secara cuma-cuma kepada masyarakat (yang mungkin tidak mampu membayar jasa hukum konvensional)"),
+
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class CardFAQ extends StatelessWidget {
+  const CardFAQ({
+    super.key, required this.question, required this.answer,
+  });
+
+  final String question;
+  final String answer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        EasyFaq(
+            questionTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            anserTextStyle: TextStyle(fontSize: 13),
+            borderRadius: BorderRadius.circular(5),
+            backgroundColor: Colors.white,
+            question: question,
+            answer: answer),
+          SizedBox(height: 10,)
+      ],
     );
   }
 }

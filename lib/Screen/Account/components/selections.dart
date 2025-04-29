@@ -32,6 +32,7 @@ class Selections extends StatelessWidget {
               child: SvgPicture.asset(
                 icon,
                 color: Colors.black,
+                width: 25,
               ),
             ),
             SizedBox(
@@ -39,6 +40,7 @@ class Selections extends StatelessWidget {
             ),
             Text(
               title,
+              overflow: TextOverflow.clip,
               style: TextStyle(
                   fontWeight: FontWeight.w700, fontSize: 12),
             ),
