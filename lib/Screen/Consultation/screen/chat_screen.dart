@@ -31,6 +31,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   String _userName = "";
+  String? _problemUser ;
   Uint8List? ktpUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -61,6 +62,28 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       setState(() {
         _ktpExists = true;
+      });
+    }
+  }
+
+  Future<void> _getProblemUserFromFirebase() async {
+    final String currentUserId = _auth.currentUser!.uid;
+    final QuerySnapshot<Map<String, dynamic>> userProblem = await FirebaseFirestore.instance
+    .collection("chat_konsultasi")
+    .doc(currentUserId)
+    .collection("problem_user")
+    // .orderBy('timestamp', descending: true)
+    .get();
+
+    if(userProblem.docs.isNotEmpty){
+       final Map<String, dynamic> data = userProblem.docs.first.data();
+       final String problem = data['user_problem'];
+       setState(() {
+         _problemUser = problem;
+       });
+    }else{
+      setState(() {
+        _problemUser = "Anda belum memberitahu masalah anda";
       });
     }
   }
@@ -131,8 +154,16 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage() async {
-    if(_messageController.text.trim().isNotEmpty){
-     await _chatServices.sendMessageToAdmin(_messageController.text.trim(), widget.receiverID);
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if(_messageController.text.trim().isNotEmpty && currentUser != null){
+     await _chatServices.sendMessageToAdmin(_messageController.text.trim(), 
+     widget.receiverID);
+
+     await FirebaseFirestore.instance.collection("consultations").doc(currentUser.uid).set({
+      'lastMessage': _messageController.text.trim(),
+       'lastTimesStamp': DateTime.now(),
+     }, SetOptions(merge:true));
       _messageController.clear();
     }
   }
@@ -347,6 +378,12 @@ Future<void> _pickFile() async {
       // take username & ktp
       final selected = Provider.of<ConsultationProvider>(context, listen: false).selectedConsultation;
 
+      final QuerySnapshot<Map<String, dynamic>> userProblemSnapshot = await FirebaseFirestore.instance
+      .collection("chat_konsultasi")
+      .doc(currentUserId)
+      .collection("problem_user")
+      .get();
+
       final userDoc = await FirebaseFirestore.instance.collection("users").doc(currentUserId).get();
       final String userName = userDoc.data()?['nama'] ?? "Pengguna";
 
@@ -368,7 +405,13 @@ Future<void> _pickFile() async {
           'timestamp': Timestamp.now(),
           'type': 'intro'
         });
-
+        await messageCollection.add({
+          'senderID': currentUserId,
+          'receiverrID': widget.receiverID,
+          'messages': userProblemSnapshot,
+          'timestamp': TimeOfDay.now(),
+          'type': 'problem_user'
+        });
         // send ktp user
         await messageCollection.add({
           'senderID': currentUserId,
@@ -415,6 +458,7 @@ Future<void> _pickFile() async {
       }
     });
     _getUserNameFromFirebase();
+    _getProblemUserFromFirebase();
     WidgetsBinding.instance.addPostFrameCallback((_){
       // Hanya jalankan sendKtpMessageIfNeeded jika KTP sudah ada
       if (_ktpExists) {
@@ -610,6 +654,29 @@ Future<void> _pickFile() async {
                       ],
                     ),
                   ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 70, right: 10, bottom: 10),
+            decoration: BoxDecoration(
+              color: Colors.red.shade600,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(1),
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              )
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+               _problemUser ?? "null",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500
                 ),
               ),
             ),
