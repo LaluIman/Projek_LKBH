@@ -8,10 +8,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AccountScreen extends StatefulWidget {
   static String routeName = "/account";
-  AccountScreen({super.key,});
+  AccountScreen({
+    super.key,
+  });
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
@@ -20,6 +23,7 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   final auth = AuthService();
   String? userName;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -31,31 +35,88 @@ class _AccountScreenState extends State<AccountScreen> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // print("User UID: ${user.uid}"); // Cek UID
-
         String uid = user.uid;
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(uid)
-            .get();
+        DocumentSnapshot userDoc =
+            await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-        if (userDoc.exists) {
-          // print("Data ditemukan: ${userDoc.data()}");  // Debug data
-          setState(() {
-            userName = userDoc['nama'];
-          });
-        } else {
-          print('User tidak ditemukan di Firestore');
+        // Check if widget is still mounted before calling setState
+        if (mounted) {
+          if (userDoc.exists) {
+            setState(() {
+              userName = userDoc['nama'];
+              _isLoading = false;
+            });
+          } else {
+            print('User tidak ditemukan di Firestore');
+            setState(() {
+              _isLoading = false;
+            });
+          }
         }
       } else {
         print('User belum login');
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     } catch (e) {
       print('Error: $e');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
+  Widget _buildProfilePicShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        height: 130,
+        width: 130,
+        decoration: BoxDecoration(
+            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+            shape: BoxShape.circle),
+      ),
+    );
+  }
 
+  Widget _buildUsernameShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        width: 200,
+        height: 25,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Container(
+          width: 150,
+          height: 16,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +128,10 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
+                _isLoading ? _buildProfilePicShimmer() :
                 Container(
                   height: 130,
                   width: 130,
@@ -77,69 +141,77 @@ class _AccountScreenState extends State<AccountScreen> {
                       shape: BoxShape.circle),
                   child: Center(
                     child: Text(
-                      userName.toString().substring(0, 1).toUpperCase(),
-                      // auth.getCurrentUser()!.email.toString().substring(0, 4).toUpperCase(),
-                      style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w500),
+                      userName != null && userName!.isNotEmpty
+                          ? userName![0].toUpperCase()
+                          : "?",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  userName ?? "Nama Pengguna",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  auth.getCurrentUser()!.email.toString(),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                _isLoading
+                    ? _buildUsernameShimmer()
+                    : Text(
+                        userName ?? "Nama Pengguna",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                _isLoading
+                    ? _buildEmailShimmer()
+                    : Text(
+                        auth.getCurrentUser()?.email?.toString() ??
+                            "Email tidak tersedia",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                 SizedBox(
                   height: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    children: [
-                      Selections(
-                        icon: "assets/icons/User Icon.svg",
-                        title: "Data diri",
-                        press: () => Navigator.pushNamed(context, "/datadiri")
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                        children: [
+                          Selections(
+                              icon: "assets/icons/User Icon.svg",
+                              title: "Data diri",
+                              press: () =>
+                                  Navigator.pushNamed(context, "/datadiri")),
+                          Selections(
+                            icon: "assets/icons/Setting Icon.svg",
+                            title: "Pengaturan",
+                            press: () =>
+                                Navigator.pushNamed(context, "/pengaturan"),
+                          ),
+                          Selections(
+                            icon: "assets/icons/QnA Icon.svg",
+                            title: "Hal yang sering ditanyakan",
+                            press: () => Navigator.pushNamed(context, "/qna"),
+                          ),
+                          Selections(
+                            icon: "assets/icons/ProfileLKBH Icon.svg",
+                            title: "Tentang LKBH FH Universitas Mulawarman",
+                            press: () =>
+                                Navigator.pushNamed(context, "/profil_lkbh"),
+                          ),
+                        ],
                       ),
-                      Selections(
-                        icon: "assets/icons/Setting Icon.svg",
-                        title: "Pengaturan",
-                        press: () => Navigator.pushNamed(context, "/pengaturan"),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Selections(
-                        icon: "assets/icons/QnA Icon.svg",
-                        title: "Hal yang sering ditanyakan",
-                        press: () => Navigator.pushNamed(context, "/qna"),
-                      ),
-                      Selections(
-                        icon: "assets/icons/ProfileLKBH Icon.svg",
-                        title: "Tentang LKBH FH Universitas Mulawarman",
-                        press: () => Navigator.pushNamed(context, "/profil_lkbh"),
-                      ),
-                      Selections(
-                        icon: "assets/icons/Feedback Icon.svg",
-                        title: "Berikan umpan balik!",
-                        press: () {},
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 50,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -152,6 +224,8 @@ class _AccountScreenState extends State<AccountScreen> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                               titleTextStyle: TextStyle(
                                   color: KPrimaryColor,
                                   fontWeight: FontWeight.w600,
@@ -204,7 +278,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                     );
                                     await Future.delayed(
                                         const Duration(seconds: 3));
-        
+
                                     Navigator.pop(context);
                                     Navigator.pushReplacementNamed(
                                         context, "/login");
@@ -214,7 +288,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                         horizontal: 25, vertical: 10),
                                     decoration: BoxDecoration(
                                         color: Colors.red.shade100,
-                                        borderRadius: BorderRadius.circular(10)),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     child: Text(
                                       "Keluar",
                                       style: TextStyle(

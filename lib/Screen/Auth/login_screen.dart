@@ -6,7 +6,6 @@ import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:text_divider/text_divider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? errorMessage;
   bool _isPasswordVisible = true;
+  bool _isManualLoading = false; // Track loading for manual login
+  bool _isGoogleLoading = false; // Track loading for Google login
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +56,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(color: KGray),
                 ),
                 const SizedBox(height: 15),
-                Image.asset("assets/images/login_image.png",
-                    fit: BoxFit.cover),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset("assets/images/login_image.png",fit: BoxFit.cover),
+                ),
                 Container(
                   padding: const EdgeInsets.only(bottom: 70),
                   decoration: const BoxDecoration(
@@ -86,49 +89,34 @@ class _LoginScreenState extends State<LoginScreen> {
                             press: () async {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
+                                
+                                // Set manual loading state to true
+                                setState(() {
+                                  _isManualLoading = true;
+                                });
+                                
                                 try {
                                   final _auth = AuthService();
                                   await _auth.signInWithEmailAndPassword(
                                     _emailController.text,
                                     _pwController.text,
                                   );
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) => Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          LoadingAnimationWidget.inkDrop(
-                                              color: KPrimaryColor, size: 70),
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                          Text(
-                                            "Tunggu sebentar...",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                                decoration:
-                                                    TextDecoration.none),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-
-                                  await Future.delayed(
-                                      const Duration(seconds: 3));
-
-                                  // Tutup loading dan navigasi ke halaman berikutnya
-                                  Navigator.pop(context);
-                                  // Jika login berhasil, arahkan ke halaman berikutnya
-                                  Navigator.pushReplacementNamed(
-                                      context, "/custom_navigation_bar");
+                                  
+                                  // Wait for 3 seconds before navigating
+                                  await Future.delayed(const Duration(seconds: 3));
+                                  
+                                  // Reset loading state and navigate
+                                  if (mounted) {
+                                    setState(() {
+                                      _isManualLoading = false;
+                                    });
+                                    Navigator.pushReplacementNamed(
+                                        context, "/custom_navigation_bar");
+                                  }
                                 } catch (e) {
+                                  // Reset loading state and show error
                                   setState(() {
+                                    _isManualLoading = false;
                                     errorMessage = e
                                         .toString()
                                         .replaceAll("Exception:", "")
@@ -139,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             bgcolor: KPrimaryColor,
                             textColor: Colors.white,
+                            isLoading: _isManualLoading, // Only use manual loading state
                           ),
                           const SizedBox(height: 10),
                           const TextDivider(text: Text("Atau")),
@@ -146,40 +135,30 @@ class _LoginScreenState extends State<LoginScreen> {
                           DefaultButton(
                             text: "Masuk dengan Google",
                             press: () async {
+                              // Set Google loading state to true
+                              setState(() {
+                                _isGoogleLoading = true;
+                              });
+                              
                               final _auth = AuthService();
                               final result = await _auth.signInWithGoogle();
 
                               if (result == null) {
+                                setState(() {
+                                  _isGoogleLoading = false;
+                                });
                                 return;
                               }
 
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      LoadingAnimationWidget.inkDrop(
-                                          color: KPrimaryColor, size: 70),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      Text(
-                                        "Tunggu sebentar...",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-
+                              // Wait for 3 seconds before navigating
                               await Future.delayed(const Duration(seconds: 3));
-                              Navigator.pop(context);
+                              
+                              // Reset loading state
+                              if (mounted) {
+                                setState(() {
+                                  _isGoogleLoading = false;
+                                });
+                              }
 
                               final user = _auth.getCurrentUser();
                               // Cek apakah user login dengan Google dan emailnya belum diverifikasi
@@ -195,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             bgcolor: KGoogleButton,
                             textColor: Colors.black,
                             icon: "assets/icons/Google Icon.svg",
+                            isLoading: _isGoogleLoading, // Only use Google loading state
                           ),
                           const SizedBox(height: 15),
                           Row(

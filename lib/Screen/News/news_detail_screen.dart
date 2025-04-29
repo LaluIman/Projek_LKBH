@@ -1,5 +1,6 @@
 //
 import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
+import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -122,37 +123,7 @@ class NewsDetailscreen extends StatelessWidget {
           child: Link(
             uri: Uri.parse(news.link!),
             builder: (context, followlink) {
-              return SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: followlink,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: KPrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Transform.rotate(
-                          angle: 3.14,
-                          child: Icon(
-                            Icons.air,
-                            color: Colors.white,
-                          )),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Lihat lebih lanjut!",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return DefaultButton(text: "Lihat selengkapnya", press: followlink, bgcolor: KPrimaryColor, textColor: Colors.white);
             },
           ),
         ));

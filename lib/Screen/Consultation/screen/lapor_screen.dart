@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 class LaporScreen extends StatefulWidget {
@@ -30,6 +29,8 @@ class _LaporScreenState extends State<LaporScreen> {
   final TextEditingController _reportController = TextEditingController();
   
   XFile? _ktpImage;
+  bool _isSubmitting = false;
+  bool _isLoadingUserData = true; // New state variable for loading user data
 
   @override
   void initState() {
@@ -38,20 +39,50 @@ class _LaporScreenState extends State<LaporScreen> {
   }
 
   void fetchUserData() async {
+    // Set loading state to true when starting to fetch
+    setState(() {
+      _isLoadingUserData = true;
+    });
+    
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      if (doc.exists) {
+      try {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (doc.exists) {
+          if (mounted) {
+            setState(() {
+              _reporterController.text = doc['nama'] ?? '';
+              _numberController.text = doc['telepon'] ?? '';
+              _addressController.text = doc['alamat'] ?? '';
+              _isLoadingUserData = false; // Set loading to false when done
+            });
+          }
+        } else {
+          // Document doesn't exist
+          if (mounted) {
+            setState(() {
+              _isLoadingUserData = false;
+            });
+          }
+        }
+      } catch (e) {
+        // Handle any errors
         if (mounted) {
           setState(() {
-            _reporterController.text = doc['nama'] ?? '';
-            _numberController.text = doc['telepon'] ?? '';
-            _addressController.text = doc['alamat'] ?? '';
+            _isLoadingUserData = false;
           });
+          print("Error fetching user data: $e");
         }
+      }
+    } else {
+      // No user signed in
+      if (mounted) {
+        setState(() {
+          _isLoadingUserData = false;
+        });
       }
     }
   }
@@ -60,9 +91,9 @@ class _LaporScreenState extends State<LaporScreen> {
     try {
       final result = await FlutterImageCompress.compressWithFile(
         file.absolute.path,
-        minWidth: 800,
-        minHeight: 800,
-        quality: 50,
+        minWidth: 600,  // Reduced from 800 for faster processing
+        minHeight: 600, // Reduced from 800 for faster processing
+        quality: 40,    // Reduced from 50 for faster processing
       );
       return result ?? await file.readAsBytes(); // fallback
     } catch (e) {
@@ -99,13 +130,17 @@ class _LaporScreenState extends State<LaporScreen> {
       return;
     }
 
-
     if (selected == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Layanan belum dipilih."))
       );
       return;
     }
+
+    // Set loading state to true
+    setState(() {
+      _isSubmitting = true;
+    });
 
     try {
       // Compress image before encoding to base64
@@ -124,40 +159,74 @@ class _LaporScreenState extends State<LaporScreen> {
         'timestamp': FieldValue.serverTimestamp()
       });
 
-      // Show loading for 3 seconds
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              LoadingAnimationWidget.inkDrop(color: KPrimaryColor, size: 70),
-              SizedBox(height: 30),
-              Text(
-                "Memproses laporan...",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    decoration: TextDecoration.none),
-              ),
-            ],
-          ),
-        ),
-      );
-
-      await Future.delayed(const Duration(seconds: 3));
-
-      // Close loading dialog and navigate
-      Navigator.pop(context);
-
-      Navigator.pushNamed(context, "/terlaporkan");
+      // Navigate immediately after successful submission
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+        Navigator.pushNamed(context, "/terlaporkan");
+      }
     } catch (e) {
       print("🔥 ERROR: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal mengirim laporan. Silakan coba lagi.")));
+      
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal mengirim laporan. Silakan coba lagi."))
+        );
+      }
     }
+  }
+
+  // Helper function to build form fields with loading state
+  Widget buildLoadingTextField({
+    required TextEditingController controller,
+    required String label,
+    required String iconPath,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return _isLoadingUserData
+      ? TextFormField(
+          enabled: false, // Disable the field while loading
+          decoration: InputDecoration(
+            labelText: label,
+            hintText: "Memuat data...",
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(10),
+              child: SvgPicture.asset(iconPath),
+            ),
+            suffixIcon: SizedBox(
+              width: 20,
+              height: 20,
+              child: Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(KPrimaryColor),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
+      : TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          decoration: InputDecoration(
+            labelText: label,
+            hintStyle: TextStyle(fontWeight: FontWeight.w500),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(10),
+              child: SvgPicture.asset(iconPath),
+            ),
+          ),
+        );
   }
 
   @override
@@ -166,7 +235,7 @@ class _LaporScreenState extends State<LaporScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 150,
-        leading: DefaultBackButton()
+        leading: _isSubmitting ? SizedBox() : DefaultBackButton()
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -211,40 +280,34 @@ class _LaporScreenState extends State<LaporScreen> {
               ),
               Text("Isi semua formulir dibawah ini sepeti yang di minta."),
               SizedBox(height: 40,),
-              TextFormField(
+              
+              // Nama Pelapor field with loading state
+              buildLoadingTextField(
                 controller: _reporterController,
-                decoration: InputDecoration(
-                  labelText: "Nama Lengkap Pelapor",
-                  hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SvgPicture.asset("assets/icons/User Icon.svg"),
-                  )
-                )
+                label: "Nama Lengkap Pelapor",
+                iconPath: "assets/icons/User Icon.svg"
               ),
+              
               SizedBox(height: 7,),
-              TextFormField(
-                keyboardType: TextInputType.phone,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              
+              // Nomor Telepon field with loading state
+              buildLoadingTextField(
                 controller: _numberController,
-                decoration: InputDecoration(
-                  labelText: "Nomor Telepon",
-                  hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SvgPicture.asset("assets/icons/Telepon Icon.svg"),
-                  )
-                )
+                label: "Nomor Telepon",
+                iconPath: "assets/icons/Telepon Icon.svg",
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly]
               ),
+              
               SizedBox(height: 7,),
-              TextFormField(
+              
+              // Alamat field with loading state
+              buildLoadingTextField(
                 controller: _addressController,
-                decoration: InputDecoration(
-                  labelText: "Alamat",
-                  hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                  prefixIcon: Icon(Icons.location_on_rounded)
-                )
+                label: "Alamat",
+                iconPath: "assets/icons/Address Icon.svg"
               ),
+              
               SizedBox(height: 20,),
               Text(
                 "Upload KTP",
@@ -313,7 +376,10 @@ class _LaporScreenState extends State<LaporScreen> {
                 decoration: InputDecoration(
                   labelText: "Nama Lengkap Yang di lapor",
                   hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                  prefixIcon: Icon(Icons.person)
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SvgPicture.asset("assets/icons/User Icon.svg"),
+                  ),
                 )
               ),
               SizedBox(height: 30,),
@@ -322,7 +388,8 @@ class _LaporScreenState extends State<LaporScreen> {
                 maxLines: 10,
                 decoration: InputDecoration(
                   hintText: "Berikan Laporan Anda",
-                  contentPadding: EdgeInsets.all(16)
+                  hintStyle: TextStyle(fontWeight: FontWeight.w500),
+                  contentPadding: EdgeInsets.all(10)
                 ),
               ),
               SizedBox(height: 30,),
@@ -330,7 +397,8 @@ class _LaporScreenState extends State<LaporScreen> {
                 text: "Kirim Laporan", 
                 press: _submitReport, 
                 bgcolor: KPrimaryColor, 
-                textColor: Colors.white
+                textColor: Colors.white,
+                isLoading: _isSubmitting,
               ),
               SizedBox(height: 70,),
             ],

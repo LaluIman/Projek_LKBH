@@ -15,7 +15,8 @@ class DefaultBackButton extends StatelessWidget {
         child: Row(
           children: [
             Icon(Icons.arrow_back_ios_new, color: KPrimaryColor,),
-            Text("Kembali", style: TextStyle(fontSize: 20, color: KPrimaryColor),)
+            SizedBox(width: 5,),
+            Text("Kembali", style: TextStyle(fontSize: 20, color: KPrimaryColor, fontWeight: FontWeight.w600),)
           ],
         ),
       ),

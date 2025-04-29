@@ -1,4 +1,3 @@
-// lib/services/connectivity_service.dart
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -24,7 +23,6 @@ class ConnectivityService {
   }
 
   void _handleConnectivityChange(List<ConnectivityResult> results) {
-    // If results list is empty or contains only "none" connection type
     bool hasNoConnection = results.isEmpty || 
         (results.length == 1 && results.first == ConnectivityResult.none);
         
@@ -86,8 +84,13 @@ class ConnectivityService {
     if (navigator != null) {
       _hideNoInternetScreen();
       
-      navigator.pushNamedAndRemoveUntil(
-        SplashScreen.routeName,
+      navigator.pushAndRemoveUntil(
+        PageRouteBuilder(
+          settings: RouteSettings(name: SplashScreen.routeName),
+          pageBuilder: (_, __, ___) => const SplashScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
         (route) => false,
       );
     }

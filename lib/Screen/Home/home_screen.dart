@@ -89,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 25),
-                // User display with shimmer effect when loading
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SizedBox(
@@ -114,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     userName ?? "User",
                                     maxLines: 2,
                                     style: const TextStyle(
-                                      fontSize: 22,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.black,
                                       overflow: TextOverflow.fade,
@@ -166,10 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                // Banner with shimmer effect when loading
                 _isLoading ? _buildCarouselShimmer() : _buildCarousel(),
                 SizedBox(height: 25),
-                // Consultation
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
@@ -291,7 +288,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                 SizedBox(height: 25),
-                // News section (using its own shimmer)
                 HomeNewsSection()
               ],
             ),
@@ -301,30 +297,31 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Shimmer effect for username only
   Widget _buildUsernameShimmer() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
-      child: Container(
-        width: 150,
-        height: 23,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Container(
+          width: 250,
+          height: 23,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
         ),
       ),
     );
   }
 
-  // Shimmer effect for carousel
   Widget _buildCarouselShimmer() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        height: 200,
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        height: 160,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -333,7 +330,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Regular carousel
   Widget _buildCarousel() {
     return Column(
       children: [
@@ -341,9 +337,10 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             Image.asset("assets/images/Banner.png"),
             Image.asset("assets/images/banner 2.png"),
+            Image.asset("assets/images/Banner 3.png"),
           ],
           options: CarouselOptions(
-            height: 200,
+            height: 160,
             viewportFraction: 0.9,
             padEnds: true,
             enlargeCenterPage: true,
@@ -362,7 +359,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [0, 1].map((index) {
+          children: [0, 1, 2].map((index) {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               curve: Curves.ease,

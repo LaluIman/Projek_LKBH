@@ -15,8 +15,9 @@ class ChatBubble extends StatelessWidget {
   final bool isCurrentUser;
 
   @override
-  Widget build(BuildContext context) {
-    if(message.type == 'ktp'){
+Widget build(BuildContext context) {
+  if (message.type == 'image' || message.type == 'ktp') {
+    try {
       Uint8List imageBytes = base64Decode(message.messages);
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -25,17 +26,21 @@ class ChatBubble extends StatelessWidget {
           width: 180,
           height: 120,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.black12),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             child: Image.memory(imageBytes, fit: BoxFit.cover),
           ),
         ),
       );
+    } catch (e) {
+      // Handle decoding error
+      return _buildTextBubble("Failed to load image", context);
     }
-      return Container(
+  } else if (message.type == 'file') {
+    return Container(
       margin: isCurrentUser
           ? EdgeInsets.only(left: 70, right: 10, bottom: 10)
           : EdgeInsets.only(right: 70, left: 10, bottom: 10),
@@ -45,8 +50,8 @@ class ChatBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: isCurrentUser ? Colors.red.shade600 : Colors.grey.shade300,
         borderRadius: BorderRadius.only(
-          topLeft: isCurrentUser ? Radius.circular(16) : Radius.circular(1),
-          topRight: isCurrentUser ? Radius.circular(1) : Radius.circular(16),
+          topLeft: isCurrentUser ? Radius.circular(10) : Radius.circular(1),
+          topRight: isCurrentUser ? Radius.circular(1) : Radius.circular(10),
           bottomLeft: Radius.circular(16),
           bottomRight: Radius.circular(16),
         ),
@@ -60,15 +65,69 @@ class ChatBubble extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text(
-          message.messages,
-          style: TextStyle(
-            color: isCurrentUser ? Colors.white : Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.insert_drive_file,
+              color: isCurrentUser ? Colors.white : Colors.black87,
+            ),
+            SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                message.fileName ?? "File",
+                style: TextStyle(
+                  color: isCurrentUser ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+  
+  // Default text message
+  return _buildTextBubble(message.messages, context);
 }
+
+Widget _buildTextBubble(String text, BuildContext context) {
+  return Container(
+    margin: isCurrentUser
+        ? EdgeInsets.only(left: 70, right: 10, bottom: 10)
+        : EdgeInsets.only(right: 70, left: 10, bottom: 10),
+    constraints: BoxConstraints(
+      maxWidth: MediaQuery.of(context).size.width * 0.7,
+    ),
+    decoration: BoxDecoration(
+      color: isCurrentUser ? Colors.red.shade600 : Colors.grey.shade300,
+      borderRadius: BorderRadius.only(
+        topLeft: isCurrentUser ? Radius.circular(10) : Radius.circular(1),
+        topRight: isCurrentUser ? Radius.circular(1) : Radius.circular(10),
+        bottomLeft: Radius.circular(16),
+        bottomRight: Radius.circular(16),
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 4,
+          offset: Offset(2, 2),
+        ),
+      ],
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: isCurrentUser ? Colors.white : Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ),
+  );
+}}

@@ -1,51 +1,77 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Message{
-  final String id;
+class Message {
   final String senderID;
   final String receiverID;
   final String messages;
   final DateTime timestamp;
-  bool? isRead;
-  String? type;
+  final String type;
+  final String? id;
+  final String? fileName;
+  final String? thumbnail;
+  final bool seen;
 
   Message({
-    required this.id,
     required this.senderID,
     required this.receiverID,
     required this.messages,
     required this.timestamp,
-    this.isRead,
-    this.type
+    this.type = 'text',
+    this.id,
+    this.fileName,
+    this.thumbnail,
+    this.seen = false,
   });
-  Message.newMessage({
-    required this.senderID,
-    required this.receiverID,
-    required this.messages,
-    required this.timestamp,
-    this.isRead = false,
-  }) : id = ''; 
 
-  factory Message.fromJson(Map<String, dynamic> json, String docId){
+  // Factory method for creating a new message
+  factory Message.newMessage({
+    required String senderID,
+    required String receiverID,
+    required String messages,
+    required DateTime timestamp,
+    String type = 'text',
+    String? fileName,
+    String? thumbnail,
+  }) {
     return Message(
-      id:docId,
-      senderID: json['senderID'] as String, 
-      receiverID: json['receiverID'] as String,
-      messages: json['messages'] as String, 
-      timestamp: json['timestamp'] != null 
-      ? (json['timestamp'] as Timestamp).toDate()
-      : DateTime.now(), 
-      isRead: json['isRead'] ?? false
+      senderID: senderID,
+      receiverID: receiverID,
+      messages: messages,
+      timestamp: timestamp,
+      type: type,
+      fileName: fileName,
+      thumbnail: thumbnail,
+      seen: false,
     );
   }
- 
-  Map<String, dynamic> toJson(){
-    return{
+
+  // Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
       'senderID': senderID,
       'receiverID': receiverID,
       'messages': messages,
       'timestamp': Timestamp.fromDate(timestamp),
-      'isRead': isRead
+      'type': type,
+      'fileName': fileName,
+      'thumbnail': thumbnail,
+      'seen': seen,
     };
+  }
+
+  // Create Message from JSON
+  factory Message.fromJson(Map<String, dynamic> json, [String? documentId]) {
+    Timestamp timestamp = json['timestamp'] as Timestamp;
+    return Message(
+      senderID: json['senderID'] ?? '',
+      receiverID: json['receiverID'] ?? '',
+      messages: json['messages'] ?? '',
+      timestamp: timestamp.toDate(),
+      type: json['type'] ?? 'text',
+      id: documentId,
+      fileName: json['fileName'],
+      thumbnail: json['thumbnail'],
+      seen: json['seen'] ?? false,
+    );
   }
 }
