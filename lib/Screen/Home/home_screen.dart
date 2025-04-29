@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontSize: 20,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.black,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.clip,
                                     ),
                                   ),
                           ],

@@ -16,6 +16,7 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  
   final _selectedColor = KPrimaryColor;
   final _unselectedColor = Color(0xff5f6368);
   final _tabs = [
@@ -81,8 +82,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height - 200,
                           child: TabBarView(children: [
-                            NewsLKBH(), // Firebase news
-                            NewsOutside(), // API news (unchanged)
+                            NewsLKBH(), 
+                            NewsOutside(),
                           ]),
                         ),
                       ),
@@ -139,7 +140,7 @@ class NewsLKBH extends StatelessWidget {
           final beritaList = snapshot.data!.docs;
           return ListView.builder(
             shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
+            physics: AlwaysScrollableScrollPhysics(),
             itemCount: beritaList.length,
             itemBuilder: (context, index) {
               DocumentSnapshot doc = beritaList[index];
@@ -211,7 +212,7 @@ class _NewsOutsideState extends State<NewsOutside> {
             final news = snapshot.data!.data!;
             return ListView.builder(
               shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
+              physics: AlwaysScrollableScrollPhysics(),
               itemCount: news.length,
               itemBuilder: (context, index) {
                 return NewsItem(news: news[index]);
