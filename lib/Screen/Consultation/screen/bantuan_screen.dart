@@ -12,6 +12,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class BantuanScreen extends StatefulWidget {
   static String routeName = "/bantuanScreen";
@@ -31,16 +32,55 @@ class _BantuanScreenState extends State<BantuanScreen> {
   final _namaController = TextEditingController();
   final _teleponController = TextEditingController();
   bool _isSubmitting = false;
-  bool _isLoadingUserData = true; // New state variable for loading user data
+  bool _isLoadingUserData = true;
+  
+  List<Map<String, dynamic>> _availableDays = [];
+  final Map<String, String> workDaysMap = {
+    'Senin': 'Senin',
+    'Selasa': 'Selasa',
+    'Rabu': 'Rabu',
+    'Kamis': 'Kamis',
+    "Jum'at": "Jum'at",
+  };
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    _generateAvailableDays();
+  }
+
+  void _generateAvailableDays() {
+    final now = DateTime.now();
+    final firstDayOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    final workDays = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at"];
+    _availableDays = [];
+    
+    for (int i = 0; i < 5; i++) { 
+      final currentDate = firstDayOfWeek.add(Duration(days: i));
+      
+      if (currentDate.isAfter(now.subtract(Duration(days: 1)))) {
+        final dayName = workDays[i];
+        final formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
+        
+        _availableDays.add({
+          'name': '$dayName, $formattedDate',
+          'date': currentDate,
+          'value': workDaysMap[dayName],
+        });
+      }
+    }
+    
+    if (_availableDays.isEmpty) {
+      _availableDays.add({
+        'name': 'Tidak ada jadwal tersedia minggu ini',
+        'date': now,
+        'value': null,
+      });
+    }
   }
 
   void fetchUserData() async {
-    // Set loading state to true when starting to fetch
     setState(() {
       _isLoadingUserData = true;
     });
@@ -57,11 +97,10 @@ class _BantuanScreenState extends State<BantuanScreen> {
             setState(() {
               _namaController.text = doc['nama'] ?? '';
               _teleponController.text = doc['telepon'] ?? '';
-              _isLoadingUserData = false; // Set loading to false when done
+              _isLoadingUserData = false;
             });
           }
         } else {
-          // Document doesn't exist
           if (mounted) {
             setState(() {
               _isLoadingUserData = false;
@@ -69,7 +108,6 @@ class _BantuanScreenState extends State<BantuanScreen> {
           }
         }
       } catch (e) {
-        // Handle any errors
         if (mounted) {
           setState(() {
             _isLoadingUserData = false;
@@ -78,7 +116,6 @@ class _BantuanScreenState extends State<BantuanScreen> {
         }
       }
     } else {
-      // No user signed in
       if (mounted) {
         setState(() {
           _isLoadingUserData = false;
@@ -95,10 +132,10 @@ class _BantuanScreenState extends State<BantuanScreen> {
         minHeight: 800,
         quality: 50,
       );
-      return result ?? await file.readAsBytes(); // fallback
+      return result ?? await file.readAsBytes();
     } catch (e) {
       print("❗Compress Error: $e");
-      return await file.readAsBytes(); // jika gagal, tetap pakai file asli
+      return await file.readAsBytes();
     }
   }
 
@@ -199,18 +236,21 @@ class _BantuanScreenState extends State<BantuanScreen> {
       return;
     }
 
-    // Set loading state to true
     setState(() {
       _isSubmitting = true;
     });
 
     try {
-      // Kompres gambar sebelum encode base64
       final ktpCompressed = await compressImage(File(_ktpImage!.path));
       final sktmCompressed = await compressImage(File(_sktmImage!.path));
 
       final ktpBase64 = base64Encode(ktpCompressed);
       final sktmBase64 = base64Encode(sktmCompressed);
+      final selectedDayInfo = _availableDays.firstWhere(
+        (day) => day['value'] == _days,
+        orElse: () => {'date': DateTime.now()},
+      );
+      final selectedDate = DateFormat('yyyy-MM-dd').format(selectedDayInfo['date']);
 
       await FirebaseFirestore.instance.collection('bantuan_hukum').add({
         'uid': user.uid,
@@ -218,12 +258,13 @@ class _BantuanScreenState extends State<BantuanScreen> {
         'telepon': _teleponController.text,
         'hari': _days,
         'waktu': _times,
+        'tanggal': selectedDate,
         'layanan': selected.name,
         'ktp_image': ktpBase64,
         'sktm_image': sktmBase64,
         'timestamp': FieldValue.serverTimestamp()
       });
-      // Reset loading state and navigate
+      
       if (mounted) {
         setState(() {
           _isSubmitting = false;
@@ -233,7 +274,6 @@ class _BantuanScreenState extends State<BantuanScreen> {
     } catch (e) {
       print("🔥 ERROR: $e");
 
-      // Reset loading state
       if (mounted) {
         setState(() {
           _isSubmitting = false;
@@ -340,7 +380,6 @@ class _BantuanScreenState extends State<BantuanScreen> {
                 SizedBox(
                   height: 16,
                 ),
-                //ini bagian sktm
                 uploadFile(
                     uploadName: "Upload SKTM",
                     img: "assets/images/SKTM.png",
@@ -357,33 +396,42 @@ class _BantuanScreenState extends State<BantuanScreen> {
                       fontWeight: FontWeight.w700),
                 ),
                 Text("Pilih hari dan waktu untuk janji temu bantuan hukum."),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    "Jadwal hanya tersedia untuk minggu ini",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Row(
                   children: [
                     Expanded(
-                      child: DropdownButtonFormField(
+                      child: DropdownButtonFormField<String?>(
                         borderRadius: BorderRadius.circular(10),
-                          dropdownColor: Colors.white,
-                          decoration: InputDecoration(
-                              hintText: "Pilih Hari",
-                              contentPadding: EdgeInsets.only(left: 10)),
-                          items: [
-                            'Senin',
-                            'Selasa',
-                            'Rabu',
-                            'Kamis',
-                            "Jum'at",
-                          ]
-                              .map((day) => DropdownMenuItem(
-                                  value: day, child: Text(day)))
-                              .toList(),
-                          onChanged: (String? day) {
-                            setState(() {
-                              _days = day;
-                            });
-                          }),
+                        dropdownColor: Colors.white,
+                        decoration: InputDecoration(
+                          hintText: "Pilih Hari",
+                          contentPadding: EdgeInsets.only(left: 10),
+                        ),
+                        items: _availableDays
+                            .map((day) => DropdownMenuItem<String?>(
+                                  value: day['value'] as String?,
+                                  child: Text(day['name']),
+                                  enabled: day['value'] != null,
+                                ))
+                            .toList(),
+                        onChanged: (String? day) {
+                          setState(() {
+                            _days = day;
+                          });
+                        }),
                     ),
                     SizedBox(
                       width: 10,
@@ -446,7 +494,6 @@ class _BantuanScreenState extends State<BantuanScreen> {
         SizedBox(
           height: 12,
         ),
-        //bagian ktp
         GestureDetector(
           onTap: () => _pickImage(isKTP),
           child: Container(
@@ -518,7 +565,7 @@ class _BantuanScreenState extends State<BantuanScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: isLoading
           ? TextFormField(
-              enabled: false, // Disable the field while loading
+              enabled: false,
               decoration: InputDecoration(
                 labelText: label,
                 hintText: "Memuat data...",

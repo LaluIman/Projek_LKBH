@@ -30,7 +30,7 @@ class _LaporScreenState extends State<LaporScreen> {
   
   XFile? _ktpImage;
   bool _isSubmitting = false;
-  bool _isLoadingUserData = true; // New state variable for loading user data
+  bool _isLoadingUserData = true; 
 
   @override
   void initState() {
@@ -39,7 +39,6 @@ class _LaporScreenState extends State<LaporScreen> {
   }
 
   void fetchUserData() async {
-    // Set loading state to true when starting to fetch
     setState(() {
       _isLoadingUserData = true;
     });
@@ -57,7 +56,7 @@ class _LaporScreenState extends State<LaporScreen> {
               _reporterController.text = doc['nama'] ?? '';
               _numberController.text = doc['telepon'] ?? '';
               _addressController.text = doc['alamat'] ?? '';
-              _isLoadingUserData = false; // Set loading to false when done
+              _isLoadingUserData = false; 
             });
           }
         } else {
@@ -91,14 +90,14 @@ class _LaporScreenState extends State<LaporScreen> {
     try {
       final result = await FlutterImageCompress.compressWithFile(
         file.absolute.path,
-        minWidth: 600,  // Reduced from 800 for faster processing
-        minHeight: 600, // Reduced from 800 for faster processing
-        quality: 40,    // Reduced from 50 for faster processing
+        minWidth: 600, 
+        minHeight: 600, 
+        quality: 40, 
       );
       return result ?? await file.readAsBytes(); // fallback
     } catch (e) {
       print("❗Compress Error: $e");
-      return await file.readAsBytes(); // if failed, use original file
+      return await file.readAsBytes(); 
     }
   }
 
@@ -137,13 +136,11 @@ class _LaporScreenState extends State<LaporScreen> {
       return;
     }
 
-    // Set loading state to true
     setState(() {
       _isSubmitting = true;
     });
 
     try {
-      // Compress image before encoding to base64
       final ktpCompressed = await compressImage(File(_ktpImage!.path));
       final ktpBase64 = base64Encode(ktpCompressed);
 
@@ -159,7 +156,6 @@ class _LaporScreenState extends State<LaporScreen> {
         'timestamp': FieldValue.serverTimestamp()
       });
 
-      // Navigate immediately after successful submission
       if (mounted) {
         setState(() {
           _isSubmitting = false;
@@ -180,7 +176,6 @@ class _LaporScreenState extends State<LaporScreen> {
     }
   }
 
-  // Helper function to build form fields with loading state
   Widget buildLoadingTextField({
     required TextEditingController controller,
     required String label,
@@ -190,7 +185,7 @@ class _LaporScreenState extends State<LaporScreen> {
   }) {
     return _isLoadingUserData
       ? TextFormField(
-          enabled: false, // Disable the field while loading
+          enabled: false,
           decoration: InputDecoration(
             labelText: label,
             hintText: "Memuat data...",
@@ -280,8 +275,6 @@ class _LaporScreenState extends State<LaporScreen> {
               ),
               Text("Isi semua formulir dibawah ini sepeti yang di minta."),
               SizedBox(height: 40,),
-              
-              // Nama Pelapor field with loading state
               buildLoadingTextField(
                 controller: _reporterController,
                 label: "Nama Lengkap Pelapor",
@@ -289,8 +282,6 @@ class _LaporScreenState extends State<LaporScreen> {
               ),
               
               SizedBox(height: 7,),
-              
-              // Nomor Telepon field with loading state
               buildLoadingTextField(
                 controller: _numberController,
                 label: "Nomor Telepon",
@@ -300,8 +291,6 @@ class _LaporScreenState extends State<LaporScreen> {
               ),
               
               SizedBox(height: 7,),
-              
-              // Alamat field with loading state
               buildLoadingTextField(
                 controller: _addressController,
                 label: "Alamat",

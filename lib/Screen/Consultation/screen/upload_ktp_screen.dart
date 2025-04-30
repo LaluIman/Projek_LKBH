@@ -23,7 +23,7 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
   String? selectedFileName;
   String? problemUser;
   bool isLoading = false;
-  
+
   TextEditingController _problemController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -59,13 +59,11 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
 
     if (_base64Image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Silakan upload KTP terlebih dahulu"))
-      );
+          SnackBar(content: Text("Silakan upload KTP terlebih dahulu")));
       return;
     } else if (_problemController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Silakan isi masalah Anda"))
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Silakan isi masalah Anda")));
       return;
     } else {
       setState(() {
@@ -78,7 +76,8 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
           .collection('chat_konsultasi')
           .doc(currentUserId)
           .collection('ktp_user')
-          .add({
+          .doc('current')
+          .set({
         'ktp': _base64Image,
         'uploadAt': FieldValue.serverTimestamp(),
       });
@@ -87,15 +86,12 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
           .collection('chat_konsultasi')
           .doc(currentUserId)
           .collection('problem_user')
-          .doc();
+          .doc('current')
+          .set({
+        'problem': _problemController.text,
+        'uploadAt': FieldValue.serverTimestamp(),
+      });
 
-          
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Berhasil terkirim!"))
-      );
-      
-      await Future.delayed(Duration(seconds: 2));
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -109,8 +105,7 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Ups...gagal, coba kirim lagi!"))
-      );
+          SnackBar(content: Text("Ups...gagal, coba kirim lagi!")));
     }
   }
 
@@ -171,14 +166,16 @@ class _UploadKtpScreenState extends State<UploadKtpScreen> {
                       height: 10,
                     ),
                     _selectedImage == null
-                    ? Image.asset("assets/images/KTP.png",
-                        height: 80,
-                        width: 80,)
-                    : Image.asset(
-                        "assets/images/KTP true.png",
-                        height: 80,
-                        width: 80,
-                      ),
+                        ? Image.asset(
+                            "assets/images/KTP.png",
+                            height: 80,
+                            width: 80,
+                          )
+                        : Image.asset(
+                            "assets/images/KTP true.png",
+                            height: 80,
+                            width: 80,
+                          ),
                     if (selectedFileName == null)
                       Text(
                         "format png, jpg, jpeg",
