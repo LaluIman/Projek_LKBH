@@ -38,31 +38,31 @@ class _NewsScreenState extends State<NewsScreen> {
           width: double.infinity,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 25,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  "Berita Terkini",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w900,
                   ),
-                  Text(
-                    "Berita Terkini",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(
-                    "Lihat berita dan kegiata terbaru dari LKBH FH UNMUL \n atau dari berita hukum dan politik dari luar",
-                    style: TextStyle(
-                        color: KGray,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Column(
+                ),
+                Text(
+                  "Lihat berita dan kegiata terbaru dari LKBH FH UNMUL \n atau dari berita hukum dan politik dari luar",
+                  style: TextStyle(
+                      color: KGray,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Expanded(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TabBar(
@@ -75,22 +75,18 @@ class _NewsScreenState extends State<NewsScreen> {
                         unselectedLabelColor: _unselectedColor,
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 10,
                       ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height - 200,
-                          child: TabBarView(children: [
-                            NewsLKBH(), 
-                            NewsOutside(),
-                          ]),
-                        ),
+                      Expanded(
+                        child: TabBarView(children: [
+                          NewsLKBH(), 
+                          NewsOutside(),
+                        ]),
                       ),
                     ],
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
         ),
