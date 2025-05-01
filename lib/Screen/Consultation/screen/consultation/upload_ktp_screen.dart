@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/service-v2/consultation_service.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation_service.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';

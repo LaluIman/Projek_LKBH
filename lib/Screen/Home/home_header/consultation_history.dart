@@ -1,11 +1,11 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/chat_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation-v2/chat_screen.dart';
 
 class ConsultationHistoryScreen extends StatelessWidget {
   static String routeName = "/consultation_history";

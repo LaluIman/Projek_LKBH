@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
+                                  color: Colors.grey.shade500,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Padding(
@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
+                                  color: Colors.grey.shade500,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Padding(

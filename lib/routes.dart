@@ -12,7 +12,6 @@ import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/uplo
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/bantuan_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/lapor_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Home/home_header/consultation_history.dart';
-// import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/upload_ktp_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/consultation_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Home/home_screen.dart';

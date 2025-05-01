@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation_service.dart';
@@ -12,10 +13,10 @@ class ChatScreen extends StatefulWidget {
   final String consultationType;
 
   const ChatScreen({
-    Key? key,
+    super.key,
     required this.consultationId,
     required this.consultationType,
-  }) : super(key: key);
+  });
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -26,6 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final ConsultationService _consultationService = ConsultationService();
   bool _isProblemSubmitted = false;
   bool _isLoading = false;
+  StreamSubscription? _consultationSubscription;
 
   @override
   void initState() {
@@ -34,10 +36,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _checkProblemStatus() {
-    _consultationService
+    _consultationSubscription = _consultationService
         .getConsultationById(widget.consultationId)
         .listen((consultation) {
-      if (consultation != null) {
+      if (consultation != null && mounted) {
         setState(() {
           _isProblemSubmitted = consultation.problem.isNotEmpty;
         });
@@ -51,6 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _messageController.clear();
 
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
@@ -59,6 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if (!_isProblemSubmitted) {
         await _consultationService.updateProblem(
             widget.consultationId, message);
+        if (!mounted) return;
         setState(() {
           _isProblemSubmitted = true;
         });
@@ -66,10 +70,12 @@ class _ChatScreenState extends State<ChatScreen> {
         await _consultationService.sendMessage(widget.consultationId, message);
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengirim: $e')),
       );
     } finally {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -114,26 +120,32 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Text('Hapus', style: TextStyle(color: Colors.red)),
               onPressed: () async {
                 Navigator.of(context).pop();
-                setState(() {
-                  _isLoading = true;
-                });
-                
+                if (mounted) {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                }
+
                 try {
                   await _consultationService.deleteMessage(
-                    widget.consultationId, 
-                    messageId
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Pesan berhasil dihapus')),
-                  );
+                      widget.consultationId, messageId);
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Pesan berhasil dihapus')),
+                    );
+                  }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Gagal menghapus pesan: $e')),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Gagal menghapus pesan: $e')),
+                    );
+                  }
                 } finally {
-                  setState(() {
-                    _isLoading = false;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
                 }
               },
             ),
@@ -188,9 +200,8 @@ class _ChatScreenState extends State<ChatScreen> {
               width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: KPrimaryColor,
-                borderRadius: BorderRadius.circular(10)
-              ),
+                  color: KPrimaryColor,
+                  borderRadius: BorderRadius.circular(10)),
               child: Row(
                 children: [
                   Icon(Icons.info_outline, color: Colors.white),
@@ -198,7 +209,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: Text(
                       'Silakan ceritakan masalah hukum Anda secara detail pada kotak pesan di bawah, lalu tekan tombol kirim.',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -232,7 +244,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset("assets/images/Berikan masalah.png", fit: BoxFit.cover, width: 300,),
+                          Image.asset(
+                            "assets/images/Berikan masalah.png",
+                            fit: BoxFit.cover,
+                            width: 300,
+                          ),
                           SizedBox(height: 20),
                           Text(
                             !_isProblemSubmitted
@@ -266,18 +282,22 @@ class _ChatScreenState extends State<ChatScreen> {
                       alignment:
                           isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: GestureDetector(
-                        onLongPress: isMe ? () => _showDeleteConfirmation(message.id) : null,
+                        onLongPress: isMe
+                            ? () => _showDeleteConfirmation(message.id)
+                            : null,
                         child: Container(
                           margin: EdgeInsets.symmetric(vertical: 5),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
                           decoration: BoxDecoration(
                             color: isMe ? KPrimaryColor : Colors.grey[300],
                             borderRadius: BorderRadius.only(
-                              topLeft:
-                                  isMe ? Radius.circular(10) : Radius.circular(1),
-                              topRight:
-                                  isMe ? Radius.circular(1) : Radius.circular(10),
+                              topLeft: isMe
+                                  ? Radius.circular(10)
+                                  : Radius.circular(1),
+                              topRight: isMe
+                                  ? Radius.circular(1)
+                                  : Radius.circular(10),
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10),
                             ),
@@ -345,7 +365,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: isMe ? Colors.white70 : Colors.black54,
+                                      color: isMe
+                                          ? Colors.white70
+                                          : Colors.black54,
                                     ),
                                   ),
                                   if (isMe) ...[
@@ -353,7 +375,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                     Icon(
                                       Icons.done_all,
                                       size: 12,
-                                      color: message.isRead ? Colors.white : Colors.white70,
+                                      color: message.isRead
+                                          ? Colors.white
+                                          : Colors.white70,
                                     )
                                   ]
                                 ],
@@ -414,14 +438,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   Container(
                     padding: EdgeInsets.all(1),
                     decoration: BoxDecoration(
-                        color:  KPrimaryColor,
-                        shape: BoxShape.circle),
+                        color: KPrimaryColor, shape: BoxShape.circle),
                     child: _isLoading
                         ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: LoadingAnimationWidget.inkDrop(
-                              color: Colors.white, size: 30),
-                        )
+                            padding: const EdgeInsets.all(8.0),
+                            child: LoadingAnimationWidget.inkDrop(
+                                color: Colors.white, size: 30),
+                          )
                         : IconButton(
                             icon: Icon(
                               Icons.send,
@@ -445,6 +468,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
+    // Cancel the stream subscription to prevent memory leaks
+    _consultationSubscription?.cancel();
     _messageController.dispose();
     super.dispose();
   }

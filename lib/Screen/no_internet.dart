@@ -16,10 +16,8 @@ class NoInternetScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Status bar area with time and icons
             const SizedBox(height: 30),
 
-            // Main content
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
