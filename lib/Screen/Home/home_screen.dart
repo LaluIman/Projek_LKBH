@@ -96,30 +96,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Selamat datang 👋",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: KPrimaryColor,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Selamat datang 👋",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: KPrimaryColor,
+                                ),
                               ),
-                            ),
-                            _isLoading
-                                ? _buildUsernameShimmer()
-                                : Text(
-                                    userName ?? "User",
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black,
-                                      overflow: TextOverflow.clip,
+                              _isLoading
+                                  ? _buildUsernameShimmer()
+                                  : Text(
+                                      userName ?? "User",
+                                      maxLines: 2,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black,
+                                        overflow: TextOverflow.clip,
+                                      ),
                                     ),
-                                  ),
-                          ],
+                            ],
+                          ),
                         ),
                         Row(
                           children: [
@@ -195,9 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 4,
-                              childAspectRatio: 1,
+                              childAspectRatio: 0.9,
                               crossAxisSpacing: 0,
-                              mainAxisSpacing: 10,
+                              mainAxisSpacing: 15,
                             ),
                             itemCount: 8,
                             itemBuilder: (context, index) {

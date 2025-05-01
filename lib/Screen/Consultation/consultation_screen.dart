@@ -49,9 +49,8 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                           childAspectRatio: 0.9,
-                          crossAxisSpacing: 0,
-                          mainAxisSpacing: 9,
-                          // mainAxisSpacing: 10,
+                          crossAxisSpacing: 1,
+                          mainAxisSpacing: 15,
                         ), 
                         itemCount: ConsultationType.listConsultationType.length,
                         itemBuilder: (context, index){

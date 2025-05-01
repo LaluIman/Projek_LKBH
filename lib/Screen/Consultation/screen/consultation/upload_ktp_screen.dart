@@ -55,53 +55,66 @@ class _UploadKTPScreenState extends State<UploadKTPScreen> {
   }
 
   Future<void> _uploadKTP() async {
-    if (_ktpImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Silakan pilih gambar KTP terlebih dahulu')),
-      );
-      return;
-    }
+  if (_ktpImage == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Silakan pilih gambar KTP terlebih dahulu')),
+    );
+    return;
+  }
 
-    setState(() {
-      _isLoading = true;
+  setState(() {
+    _isLoading = true;
+  });
+
+  try {
+    final compressedImage = await compressImage(File(_ktpImage!.path));
+    final base64Image = base64Encode(compressedImage);
+
+    final consultationType = Provider.of<ConsultationProvider>(context, listen: false).selectedConsultation!;
+    
+    if (consultationType.name.isEmpty) {
+      throw Exception("Jenis konsultasi tidak valid");
+    }
+    
+    print("Image size after compression: ${compressedImage.length} bytes");
+    
+    // Perbaikan: Tambahkan timeout untuk permintaan
+    final consultationId = await _consultationService.createConsultation(
+      consultationType,
+      base64Image,
+    ).timeout(const Duration(seconds: 30), onTimeout: () {
+      throw Exception("Koneksi timeout, coba lagi nanti");
     });
 
-    try {
-      final compressedImage = await compressImage(File(_ktpImage!.path));
-      final base64Image = base64Encode(compressedImage);
-
-      final consultationType = Provider.of<ConsultationProvider>(context, listen: false).selectedConsultation!;
-      
-      final consultationId = await _consultationService.createConsultation(
-        consultationType,
-        base64Image,
-      );
-
-      if (!mounted) return;
-      
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChatScreen(
-            consultationId: consultationId,
-            consultationType: consultationType.name,
-          ),
+    if (!mounted) return;
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          consultationId: consultationId,
+          consultationType: consultationType.name,
+        ),
+      ),
+    );
+  } catch (e) {
+    if (mounted) {
+      print("❗Upload Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mengupload KTP: ${e.toString().contains("cloud_firestore") ? "Data tidak valid, periksa kembali informasi Anda" : e}'),
+          duration: const Duration(seconds: 5),
         ),
       );
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal mengupload KTP: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+    }
+  } finally {
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

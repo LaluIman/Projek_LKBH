@@ -209,9 +209,10 @@ class _EditDataDiriScreenState extends State<EditDataDiriScreen> {
                   const Text(
                     "Edit Data",
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: KPrimaryColor),
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                      color: KPrimaryColor,
+                    ),
                   ),
                   Text(
                     "Lengkapi Profil kamu sebelum kamu bisa \n lanjutkan untuk konsultasi!",
@@ -250,19 +251,33 @@ class _EditDataDiriScreenState extends State<EditDataDiriScreen> {
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white),
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
                         child: const Text("Batal Edit",
-                            style: TextStyle(color: Colors.red)),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: KPrimaryColor,
+                            )),
                       ),
                       ElevatedButton(
                         onPressed: isDataChanged
                             ? () => showConfirmationDialog()
                             : null,
                         style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                isDataChanged ? KPrimaryColor : Colors.grey),
+                          backgroundColor:
+                              isDataChanged ? KPrimaryColor : Colors.grey,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
                         child: const Text("Simpan Profil",
-                            style: TextStyle(color: Colors.white)),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            )),
                       ),
                     ],
                   ),
