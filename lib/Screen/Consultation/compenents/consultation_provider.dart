@@ -3,15 +3,15 @@ import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
 
 class ConsultationProvider with ChangeNotifier {
   ConsultationType? _selectedConsultation;
-
+  
   ConsultationType? get selectedConsultation => _selectedConsultation;
-
-  void setSelectedConsultation(ConsultationType consultation) {
-    _selectedConsultation = consultation;
+  
+  void setSelectedConsultation(ConsultationType consultationType) {
+    _selectedConsultation = consultationType;
     notifyListeners();
   }
-
-  void clearSelectedConsultation() {
+  
+  void resetSelectedConsultation() {
     _selectedConsultation = null;
     notifyListeners();
   }

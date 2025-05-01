@@ -1,41 +1,44 @@
 import 'package:flutter/material.dart';
 
 class ConsultationType {
+  final String id;
   final String name;
   final String icon;
 
   ConsultationType({
+    required this.id,
     required this.name,
     required this.icon,
   });
 
   static List<ConsultationType> listConsultationType = [
-    ConsultationType(name: "Waris", icon: "assets/icons/konsultasi/Waris Icon.svg"),
-    ConsultationType(name: "Perusahaan", icon: "assets/icons/konsultasi/Perusahaan Icon.svg"),
-    ConsultationType(name: "Pertahanan & Properti", icon: "assets/icons/konsultasi/P&P Icon.svg"),
-    ConsultationType(name: "Asuransi", icon: "assets/icons/konsultasi/Asuransi Icon.svg"),
-    ConsultationType(name: "Penceraian", icon: "assets/icons/konsultasi/Penceraian Icon.svg"),
-    ConsultationType(name: "Perkawinan", icon: "assets/icons/konsultasi/Perkawinan Icon.svg"),
-    ConsultationType(name: "Kehutanan  & Perkebunan", icon: "assets/icons/konsultasi/Kehutanan Icon.svg"),
-    ConsultationType(name: "Pertambangan", icon: "assets/icons/konsultasi/Pertambangan Icon.svg"),
-    ConsultationType(name: "Perjanjian", icon: "assets/icons/konsultasi/Perjanjain Icon.svg"),
-    ConsultationType(name: "Ketenagakerjaan", icon: "assets/icons/konsultasi/ketenagakerjaan.svg"),
-    ConsultationType(name: "Pidana umum", icon: "assets/icons/konsultasi/Pidana Icon.svg"),
-    ConsultationType(name: "Pemilu", icon: "assets/icons/konsultasi/Pemilu Icon.svg"),
-    ConsultationType(name: "HKI", icon: "assets/icons/konsultasi/HKI Icon.svg"),
-    ConsultationType(name: "Pajak", icon: "assets/icons/konsultasi/Pajak Icon.svg"),
-    ConsultationType(name: "Adopsi", icon: "assets/icons/konsultasi/Adopsi Icon.svg"),
-    ConsultationType(name: "Investasi & Pasar modal", icon: "assets/icons/konsultasi/Investasi.svg"),
-    ConsultationType(name: "Informasi & Teknologi", icon: "assets/icons/konsultasi/Teknologi Icon.svg"),
-    ConsultationType(name: "Korupsi", icon: "assets/icons/konsultasi/Korupsi Icon.svg"),
-    ConsultationType(name: "Perlindungan Konsumen", icon: "assets/icons/konsultasi/Proteksi Icon.svg"),
-    ConsultationType(name: "Pengampunan", icon: "assets/icons/konsultasi/Pengampuan Icon.svg"),
-    ConsultationType(name: "Perdagangan", icon: "assets/icons/konsultasi/Perdagangan Icon.svg"),
-    ConsultationType(name: "KDRT", icon: "assets/icons/konsultasi/KDRT Icon.svg"),
-    ConsultationType(name: "Pinjaman Online", icon: "assets/icons/konsultasi/Pinjol Icon.svg"),
-    ConsultationType(name: "Narkoba", icon: "assets/icons/konsultasi/narkoba.svg"),
+    ConsultationType(id: "Waris", name: "Waris", icon: "assets/icons/konsultasi/Waris Icon.svg"),
+    ConsultationType(id: "Perusahaan", name: "Perusahaan", icon: "assets/icons/konsultasi/Perusahaan Icon.svg"),
+    ConsultationType(id: "Pertahanan & Properti", name: "Pertahanan & Properti", icon: "assets/icons/konsultasi/P&P Icon.svg"),
+    ConsultationType(id: "Asuransi", name: "Asuransi", icon: "assets/icons/konsultasi/Asuransi Icon.svg"),
+    ConsultationType(id: "Penceraian", name: "Penceraian", icon: "assets/icons/konsultasi/Penceraian Icon.svg"),
+    ConsultationType(id: "Perkawinan", name: "Perkawinan", icon: "assets/icons/konsultasi/Perkawinan Icon.svg"),
+    ConsultationType(id: "Kehutanan & Perkebunan", name: "Kehutanan & Perkebunan", icon: "assets/icons/konsultasi/Kehutanan Icon.svg"),
+    ConsultationType(id: "Pertambangan", name: "Pertambangan", icon: "assets/icons/konsultasi/Pertambangan Icon.svg"),
+    ConsultationType(id: "Perjanjian", name: "Perjanjian", icon: "assets/icons/konsultasi/Perjanjain Icon.svg"),
+    ConsultationType(id: "Ketenagakerjaan", name: "Ketenagakerjaan", icon: "assets/icons/konsultasi/ketenagakerjaan.svg"),
+    ConsultationType(id: "Pidana umum", name: "Pidana umum", icon: "assets/icons/konsultasi/Pidana Icon.svg"),
+    ConsultationType(id: "Pemilu", name: "Pemilu", icon: "assets/icons/konsultasi/Pemilu Icon.svg"),
+    ConsultationType(id: "HKI", name: "HKI", icon: "assets/icons/konsultasi/HKI Icon.svg"),
+    ConsultationType(id: "Pajak", name: "Pajak", icon: "assets/icons/konsultasi/Pajak Icon.svg"),
+    ConsultationType(id: "Adopsi", name: "Adopsi", icon: "assets/icons/konsultasi/Adopsi Icon.svg"),
+    ConsultationType(id: "Investasi & Pasar modal", name: "Investasi & Pasar modal", icon: "assets/icons/konsultasi/Investasi.svg"),
+    ConsultationType(id: "Informasi & Teknologi", name: "Informasi & Teknologi", icon: "assets/icons/konsultasi/Teknologi Icon.svg"),
+    ConsultationType(id: "Korupsi", name: "Korupsi", icon: "assets/icons/konsultasi/Korupsi Icon.svg"),
+    ConsultationType(id: "Perlindungan Konsumen", name: "Perlindungan Konsumen", icon: "assets/icons/konsultasi/Proteksi Icon.svg"),
+    ConsultationType(id: "Pengampunan", name: "Pengampunan", icon: "assets/icons/konsultasi/Pengampuan Icon.svg"),
+    ConsultationType(id: "Perdagangan", name: "Perdagangan", icon: "assets/icons/konsultasi/Perdagangan Icon.svg"),
+    ConsultationType(id: "KDRT", name: "KDRT", icon: "assets/icons/konsultasi/KDRT Icon.svg"),
+    ConsultationType(id: "Pinjaman Online", name: "Pinjaman Online", icon: "assets/icons/konsultasi/Pinjol Icon.svg"),
+    ConsultationType(id: "Narkoba", name: "Narkoba", icon: "assets/icons/konsultasi/narkoba.svg"),
   ];
 }
+
 
 
 class ButtonConsultantChoises {
@@ -57,7 +60,7 @@ class ButtonConsultantChoises {
       buttonDesc: "Ceritakan masalah kamu untuk mendapatkan\nsaran atau pendapat hukum dari kami",
       buttonIcon: "assets/images/Konsultasi.png",
       click: (context) {
-        Navigator.pushNamed(context, "/uploadKtpScreen");
+        Navigator.pushNamed(context, "/uploadKtp");
       },
     ),
     ButtonConsultantChoises(

@@ -8,15 +8,17 @@ import 'package:aplikasi_lkbh_unmul/Screen/Auth/login_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/account_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/register_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Auth/verify_account_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/upload_ktp_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/bantuan_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/lapor_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/upload_ktp_screen.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Home/home_header/consultation_history.dart';
+// import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/upload_ktp_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/bottom_navbar.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/consultation_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Home/home_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/news_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/himbauan_screen.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/notification.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Home/home_header/notification.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/splash_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/success_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/terjadwalkan_screen.dart';
@@ -44,14 +46,14 @@ final Map<String, WidgetBuilder> routes = {
   PengaturanScreen.routeName : (context) => PengaturanScreen(),
   QnaScreen.routeName: (context) => QnaScreen(),
   ProfilLkbhScreen.routeName: (context) => ProfilLkbhScreen(),
-  //Consultation
-  UploadKtpScreen.routeName: (context) => UploadKtpScreen(),
+  UploadKTPScreen.routeName: (context) => UploadKTPScreen(),
   BantuanScreen.routeName:(context) => BantuanScreen(),
   LaporScreen.routeName: (context) => LaporScreen(),
   EditDataDiriScreen.routeName: (context) => EditDataDiriScreen(
     documentId: ModalRoute.of(context)!.settings.arguments as String,
   ),
   //Header
-  NotificationScreen.routeName: (context) => NotificationScreen()
+  NotificationScreen.routeName: (context) => NotificationScreen(),
+  ConsultationHistoryScreen.routeName: (context) => ConsultationHistoryScreen()
 
 };

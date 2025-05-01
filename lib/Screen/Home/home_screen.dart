@@ -145,7 +145,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 5,
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(context, "/consultation_history");
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade400,

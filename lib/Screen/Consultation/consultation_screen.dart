@@ -61,8 +61,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                   Provider.of<ConsultationProvider>(context, listen: false)
-                                  .setSelectedConsultation(consultationType);
+                                   Provider.of<ConsultationProvider>(context, listen: false).setSelectedConsultation(consultationType);
                                   showModalBottomSheet(
                                     context: context, 
                                     builder: (BuildContext context){
