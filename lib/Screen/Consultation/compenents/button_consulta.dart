@@ -78,20 +78,19 @@ class ButtonContainer extends StatelessWidget {
             const SizedBox(width: 15),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(buttonName, style: TextStyle(
                       color: KPrimaryColor,
-                      fontSize: 24,
+                      fontSize: 25,
                       fontWeight: FontWeight.w700
                       ),
                     ),
-                
                     Text(buttonDesc, style: TextStyle(
-                       fontSize: 12,
-                       fontWeight: FontWeight.w400
+                       fontSize: 12.5,
+                       fontWeight: FontWeight.w500
                       ),
                      
                     )

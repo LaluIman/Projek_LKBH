@@ -49,6 +49,14 @@ class ConsultationService {
     }
   }
 
+  Future<void> deleteConsultation(String consultationId) async {
+    try {
+      await _firestore.collection('consultations').doc(consultationId).delete();
+      // print('Consultation deleted: $consultationId');
+    } catch (e) {
+      print('Failed to delete consultation: $e');
+    }
+  }
 
   Future<void> updateProblem(String consultationId, String problem) async {
     try {
@@ -159,7 +167,6 @@ class ConsultationService {
       Map<String, dynamic> consultationData = consultationDoc.data() as Map<String, dynamic>;
       List<dynamic> messages = consultationData['messages'] ?? [];
       
-      // Find the message by ID and ensure it belongs to the current user
       int messageIndex = messages.indexWhere((message) => 
         message['id'] == messageId && message['senderId'] == currentUserId);
       
@@ -167,10 +174,8 @@ class ConsultationService {
         throw Exception('Message not found or not authorized to delete');
       }
       
-      // Remove the message
       messages.removeAt(messageIndex);
       
-      // Update the consultation with the new message list
       await _firestore.collection('consultations').doc(consultationId).update({
         'messages': messages,
       });
@@ -220,4 +225,3 @@ class ConsultationService {
     });
   }
 }
-

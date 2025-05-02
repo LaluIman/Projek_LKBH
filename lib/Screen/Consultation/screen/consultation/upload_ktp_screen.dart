@@ -76,7 +76,6 @@ class _UploadKTPScreenState extends State<UploadKTPScreen> {
       throw Exception("Jenis konsultasi tidak valid");
     }
     
-    print("Image size after compression: ${compressedImage.length} bytes");
     
     // Perbaikan: Tambahkan timeout untuk permintaan
     final consultationId = await _consultationService.createConsultation(
@@ -151,7 +150,7 @@ class _UploadKTPScreenState extends State<UploadKTPScreen> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Sebelum kamu bisa lanjut ke tahap konsultasi kamu upload KTP dan jelaskan permasalahanmu dulu ya',
+                  'Sebelum kamu bisa lanjut ke tahap konsultasi, Upload KTP dan jelaskan permasalahanmu dulu ya',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black54,

@@ -1,5 +1,4 @@
-import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/button_consulta.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
+import 'package:aplikasi_lkbh_unmul/Screen/Consultation/consultation_screen.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/model.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
@@ -12,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -123,49 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/notificationScreen");
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade500,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/Notif.svg",
-                                    width: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/consultation_history");
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade500,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/List Chat.svg",
-                                    width: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
+                        HomeHeaderButton()
                       ],
                     ),
                   ),
@@ -173,127 +129,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 15),
                 _isLoading ? _buildCarouselShimmer() : _buildCarousel(),
                 SizedBox(height: 25),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Jenis Konsultasi",
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              childAspectRatio: 0.9,
-                              crossAxisSpacing: 0,
-                              mainAxisSpacing: 15,
+                          Text(
+                            "Jenis Konsultasi",
+                            style: TextStyle(
+                              fontSize: 23,
+                              fontWeight: FontWeight.w700,
                             ),
-                            itemCount: 8,
-                            itemBuilder: (context, index) {
-                              final consultationType =
-                                  ConsultationType.listConsultationType[index];
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Provider.of<ConsultationProvider>(context,
-                                              listen: false)
-                                          .setSelectedConsultation(
-                                              consultationType);
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return SizedBox(
-                                            width: double.infinity,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [ButtonConsultan()],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          width: 66,
-                                          height: 66,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 9,
-                                          left: 8,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: SvgPicture.asset(
-                                              consultationType.icon,
-                                              width: 30,
-                                              fit: BoxFit.contain,
-                                              allowDrawingOutsideViewBox: true,
-                                              errorBuilder:
-                                                  (context, error, StackTrace) {
-                                                print(
-                                                    "SVG Loading error: $error");
-                                                return Icon(Icons.error);
-                                              },
-                                              placeholderBuilder: (context) =>
-                                                  Icon(Icons.image),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    consultationType.name,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  )
-                                ],
-                              );
-                            },
                           ),
                         ],
                       ),
-                    ),
-                SizedBox(height: 25),
+                      SizedBox(height: 20),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          childAspectRatio: 0.8,
+                          crossAxisSpacing: 1,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          final consultationType =
+                              ConsultationType.listConsultationType[index];
+                          return JenisKonsultasiItem(
+                              consultationType: consultationType);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
                 HomeNewsSection()
               ],
             ),
@@ -374,11 +248,64 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color:
-                    KPrimaryColor.withOpacity(_currentIndex == index ? 0.9 : 0.4),
+                color: KPrimaryColor.withOpacity(
+                    _currentIndex == index ? 0.9 : 0.4),
               ),
             );
           }).toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class HomeHeaderButton extends StatelessWidget {
+  const HomeHeaderButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, "/notificationScreen");
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade500,
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: SvgPicture.asset(
+                "assets/icons/Notif.svg",
+                width: 20,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, "/consultation_history");
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade500,
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: SvgPicture.asset(
+                "assets/icons/List Chat.svg",
+                width: 20,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -394,7 +321,7 @@ class HomeNewsSection extends StatefulWidget {
 
 class _HomeNewsSectionState extends State<HomeNewsSection> {
   late Future<NewsResponse> _newsFuture;
-  
+
   @override
   void initState() {
     super.initState();
@@ -403,7 +330,7 @@ class _HomeNewsSectionState extends State<HomeNewsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(          
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,27 +344,26 @@ class _HomeNewsSectionState extends State<HomeNewsSection> {
           ),
           SizedBox(height: 10),
           FutureBuilder<NewsResponse>(
-            future: _newsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return ShimmerEffect();
-              } else if (snapshot.hasError) {
-                return ShimmerEffect();
-              } else if (!snapshot.hasData || snapshot.data?.data == null) {
-                return Text("No news available");
-              } else {
-                final news = snapshot.data!.data!;
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: news.length > 5 ? 5 : news.length,
-                  itemBuilder: (context, index) {
-                    return NewsItem(news: news[index]);
-                  },
-                );
-              }
-            }
-          )
+              future: _newsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ShimmerEffect();
+                } else if (snapshot.hasError) {
+                  return ShimmerEffect();
+                } else if (!snapshot.hasData || snapshot.data?.data == null) {
+                  return Text("No news available");
+                } else {
+                  final news = snapshot.data!.data!;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: news.length > 5 ? 5 : news.length,
+                    itemBuilder: (context, index) {
+                      return NewsItem(news: news[index]);
+                    },
+                  );
+                }
+              })
         ],
       ),
     );

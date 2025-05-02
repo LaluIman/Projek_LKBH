@@ -52,7 +52,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   ),
                 ),
                 Text(
-                  "Lihat berita dan kegiata terbaru dari LKBH FH UNMUL \n atau dari berita hukum dan politik dari luar",
+                  "Lihat berita dan kegiatan terbaru dari LKBH FH UNMUL \n atau dari berita hukum dan politik",
                   style: TextStyle(
                       color: KGray,
                       fontSize: 13,
