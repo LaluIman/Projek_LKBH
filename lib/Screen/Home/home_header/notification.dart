@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
+import 'package:aplikasi_lkbh_unmul/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -148,7 +149,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         itemCount: 10,
         itemBuilder: (context, index) {
           return Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            margin: EdgeInsets.symmetric(vertical: getPropScreenWidth(5), horizontal: getPropScreenHeight(10)),
             height: 90,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -167,7 +168,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return GestureDetector(
         onTap: () => _showNotificationDetails(notification),
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          margin: EdgeInsets.symmetric(vertical: getPropScreenWidth(5), horizontal: getPropScreenHeight(10)),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
@@ -250,7 +251,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Row(
                 children: [
                   Container(
-                    width: 40,
+                    width:40,
                     height: 40,
                     decoration: BoxDecoration(
                       color: Colors.red.withOpacity(0.1),

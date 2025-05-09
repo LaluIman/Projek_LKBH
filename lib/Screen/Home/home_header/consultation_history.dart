@@ -135,7 +135,7 @@ class ConsultationHistoryScreen extends StatelessWidget {
                                 child: iconPath != null
                                     ? SvgPicture.asset(
                                         iconPath,
-                                        height: 30,
+                                        height:30,
                                         width: 30,
                                       )
                                     : Icon(Icons.help_outline,

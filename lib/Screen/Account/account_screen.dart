@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:aplikasi_lkbh_unmul/Components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Account/components/selections.dart';
 import 'package:aplikasi_lkbh_unmul/services/auth_service.dart';
+import 'package:aplikasi_lkbh_unmul/size_config.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -153,8 +154,8 @@ class _AccountScreenState extends State<AccountScreen> {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: Container(
-        height: 130,
-        width: 130,
+        height: getPropScreenHeight(130),
+        width: getPropScreenWidth(130),
         decoration: BoxDecoration(
           color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
           shape: BoxShape.circle,
@@ -171,8 +172,8 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Stack(
           children: [
             Container(
-              height: 130,
-              width: 130,
+              height: getPropScreenHeight(130),
+              width: getPropScreenWidth(130),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
@@ -253,8 +254,8 @@ class _AccountScreenState extends State<AccountScreen> {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: Container(
-        width: 200,
-        height: 25,
+        width: getPropScreenWidth(200),
+        height: getPropScreenHeight(25),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
@@ -270,8 +271,8 @@ class _AccountScreenState extends State<AccountScreen> {
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Container(
-          width: 150,
-          height: 16,
+          width: getPropScreenWidth(150),
+          height: getPropScreenWidth(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),

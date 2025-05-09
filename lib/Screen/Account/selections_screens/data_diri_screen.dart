@@ -1,5 +1,6 @@
 import 'package:aplikasi_lkbh_unmul/Components/default_back_button.dart';
 import 'package:aplikasi_lkbh_unmul/read%20data/get_user_data.dart';
+import 'package:aplikasi_lkbh_unmul/size_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -58,13 +59,13 @@ class _DataDiriScreenState extends State<DataDiriScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildShimmerItem(height: 60.0),
+              _buildShimmerItem(height: getPropScreenHeight(60)),
               const SizedBox(height: 12.0),
-              _buildShimmerItem(height: 20.0),
+              _buildShimmerItem(height: getPropScreenHeight(20)),
               const SizedBox(height: 12.0),
-              _buildShimmerItem(height: 20.0),
+              _buildShimmerItem(height: getPropScreenHeight(20)),
               const SizedBox(height: 12.0),
-              _buildShimmerItem(height: 20.0),
+              _buildShimmerItem(height: getPropScreenHeight(20)),
             ],
           ),
         ),

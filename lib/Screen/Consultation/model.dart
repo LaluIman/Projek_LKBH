@@ -57,7 +57,7 @@ class ButtonConsultantChoises {
   static List<ButtonConsultantChoises> listButtonConsultantChoises = [
     ButtonConsultantChoises(
       buttonName: "Konsultasi",
-      buttonDesc: "Ceritakan masalah kamu untuk mendapatkan\nsaran atau pendapat hukum dari kami",
+      buttonDesc: "Ceritakan masalah kamu untuk mendapatkan saran atau pendapat hukum dari kami",
       buttonIcon: "assets/images/Konsultasi.png",
       click: (context) {
         Navigator.pushNamed(context, "/uploadKtp");

@@ -12,7 +12,7 @@ class QnaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 150,
+        leadingWidth:150,
         leading: DefaultBackButton()
       ),
       body: SingleChildScrollView(

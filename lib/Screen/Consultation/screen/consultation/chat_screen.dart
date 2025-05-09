@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/Consultation/screen/consultation/consultation_service.dart';
+import 'package:aplikasi_lkbh_unmul/size_config.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -298,7 +299,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             Image.asset(
                               "assets/images/Berikan masalah.png",
                               fit: BoxFit.cover,
-                              width: 300,
+                              width: getPropScreenWidth(300),
                             ),
                             SizedBox(height: 20),
                             Text(

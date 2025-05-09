@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:aplikasi_lkbh_unmul/Screen/News/news_detail_lkbh.dart';
+import 'package:aplikasi_lkbh_unmul/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -53,8 +54,8 @@ class NewsItemLkbh extends StatelessWidget {
                         height: 100,
                       )
                     : Container(
-                        width: 130,
-                        height: 100,
+                        width: getPropScreenWidth(130),
+                        height: getPropScreenHeight(130),
                         color: Colors.grey[300],
                         child: Icon(Icons.image_not_supported),
                       ),

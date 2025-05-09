@@ -52,7 +52,7 @@ class ShimmerEffect extends StatelessWidget {
                         ),
                         Container(
                           width: 240,
-                          height: 15,
+                          height: (11),
                           color: Colors.grey.shade300,
                         ),
                         SizedBox(
@@ -68,7 +68,7 @@ class ShimmerEffect extends StatelessWidget {
                         ),
                         Container(
                           width: 150,
-                          height: 11,
+                          height: (11),
                           color: Colors.grey.shade50,
                         ),
                         SizedBox(
@@ -76,7 +76,7 @@ class ShimmerEffect extends StatelessWidget {
                         ),
                         Container(
                           width: 70,
-                          height: 12,
+                          height: 11,
                           color: Colors.grey.shade50,
                         ),
                       ],

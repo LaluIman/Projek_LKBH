@@ -4,6 +4,7 @@ import 'package:aplikasi_lkbh_unmul/Screen/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Components/shimmer.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/api_caller.dart';
 import 'package:aplikasi_lkbh_unmul/Screen/News/Model/news_response.dart';
+import 'package:aplikasi_lkbh_unmul/size_config.dart';
 import 'package:aplikasi_lkbh_unmul/styling.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -243,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               curve: Curves.ease,
-              width: _currentIndex == index ? 25 : 9,
+              width: _currentIndex == index ? getPropScreenWidth(25) : 9,
               height: 9,
               margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
               decoration: BoxDecoration(

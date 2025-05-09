@@ -497,7 +497,7 @@ class _BantuanScreenState extends State<BantuanScreen> {
         GestureDetector(
           onTap: () => _pickImage(isKTP),
           child: Container(
-              width: 400,
+              width: double.infinity,
               height: 150,
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 235, 235, 235),
