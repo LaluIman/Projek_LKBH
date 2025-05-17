@@ -1,8 +1,9 @@
-import 'package:aplikasi_lkbh_unmul/Screen/Consultation/compenents/consultation_provider.dart';
-import 'package:aplikasi_lkbh_unmul/Screen/splash_screen.dart';
-import 'package:aplikasi_lkbh_unmul/routes.dart';
-import 'package:aplikasi_lkbh_unmul/theme.dart';
-import 'package:aplikasi_lkbh_unmul/services/connectivity_service.dart';
+import 'package:aplikasi_lkbh_unmul/core/services/connection_provider.dart';
+import 'package:aplikasi_lkbh_unmul/features/Consultation/components/consultation_provider.dart';
+import 'package:aplikasi_lkbh_unmul/core/screens/no_internet.dart';
+import 'package:aplikasi_lkbh_unmul/core/screens/splash_screen.dart';
+import 'package:aplikasi_lkbh_unmul/core/routes.dart';
+import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,20 +23,6 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  late ConnectivityService _connectivityService;
-
-  @override
-  void initState() {
-    super.initState();
-    _connectivityService = ConnectivityService(navigatorKey: _navigatorKey);
-    _connectivityService.initialize();
-  }
-
-  @override
-  void dispose() {
-    _connectivityService.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +31,28 @@ class _MainAppState extends State<MainApp> {
         ChangeNotifierProvider(
           create: (context) => ConsultationProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => ConnectivityProvider(),
+        ),
       ],
-      child: MaterialApp(
-        navigatorKey: _navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: themeData(),
-        initialRoute: SplashScreen.routeName,
-        routes: routes,
+      child: Consumer<ConnectivityProvider>(
+        builder: (context, connectivity, child) {
+          return MaterialApp(
+            navigatorKey: _navigatorKey,
+            debugShowCheckedModeBanner: false,
+            theme: themeData(),
+            initialRoute: SplashScreen.routeName,
+            routes: routes,
+            builder: (context, child) {
+              if (!connectivity.isConnected) {
+                return const NoInternetScreen();
+              }
+              return child ?? const SizedBox();
+            },
+          );
+        },
       ),
     );
   }
 }
+
