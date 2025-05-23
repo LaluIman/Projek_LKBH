@@ -593,8 +593,9 @@ class _BantuanScreenState extends State<BantuanScreen> {
                         borderRadius: BorderRadius.circular(10),
                         dropdownColor: Colors.white,
                         decoration: InputDecoration(
-                          hintText: "Hari",
-                          contentPadding: EdgeInsets.only(left: 5),
+                           labelStyle: TextTheme.of(context).bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                          label: Text("Hari"),
+                          contentPadding: EdgeInsets.only(left: 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -631,8 +632,9 @@ class _BantuanScreenState extends State<BantuanScreen> {
                         borderRadius: BorderRadius.circular(10),
                         dropdownColor: Colors.white,
                         decoration: InputDecoration(
-                          hintText: "Waktu",
-                          contentPadding: EdgeInsets.only(left: 5),
+                          labelStyle: TextTheme.of(context).bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                          label: Text("Waktu"),
+                          contentPadding: EdgeInsets.only(left: 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -744,7 +746,7 @@ class _BantuanScreenState extends State<BantuanScreen> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text("Format png, jpg, jpeg",
+                            Text("Format png, jpg, jpeg(Maks 1MB)",
                                 style: TextTheme.of(context)
                                     .bodyMedium
                                     ?.copyWith(

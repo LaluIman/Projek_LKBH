@@ -3,7 +3,8 @@
 import 'package:aplikasi_lkbh_unmul/features/Account/account_screen.dart';
 import 'package:aplikasi_lkbh_unmul/features/Consultation/consultations_type_screen.dart';
 import 'package:aplikasi_lkbh_unmul/features/Home/home_screen.dart';
-import 'package:aplikasi_lkbh_unmul/features/News/news_screen.dart';import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
+import 'package:aplikasi_lkbh_unmul/features/News/news_screen.dart';
+import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

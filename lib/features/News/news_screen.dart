@@ -1,3 +1,4 @@
+import 'package:aplikasi_lkbh_unmul/core/services/double_tap_exit.dart';
 import 'package:aplikasi_lkbh_unmul/features/News/Components/news_item.dart';
 import 'package:aplikasi_lkbh_unmul/features/News/Components/news_item_lkbh.dart';
 import 'package:aplikasi_lkbh_unmul/features/News/Components/shimmer.dart';
@@ -29,60 +30,62 @@ class _NewsScreenState extends State<NewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 25,
-                ),
-                Text(
-                  "Berita Terkini",
-                  style: TextTheme.of(context).titleLarge,
-                ),
-                Text(
-                  "Lihat berita dan kegiatan terbaru dari LKBH FH UNMUL \natau dari berita hukum dan politik",
-                  style: TextTheme.of(context).bodyMedium,),
-                SizedBox(
-                  height: 30,
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TabBar(
-                        tabs: _tabs,
-                        labelStyle: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600),
-                        labelColor: _selectedColor,
-                        indicatorColor: _selectedColor,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        unselectedLabelColor: _unselectedColor,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: TabBarView(children: [
-                          NewsLKBH(), 
-                          NewsOutside(),
-                        ]),
-                      ),
-                    ],
+    return DoubleTapBackExit(
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            body: SafeArea(
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 25,
                   ),
-                )
-              ],
+                  Text(
+                    "Berita Terkini",
+                    style: TextTheme.of(context).titleLarge,
+                  ),
+                  Text(
+                    "Lihat berita dan kegiatan terbaru dari LKBH FH UNMUL \natau dari berita hukum dan politik",
+                    style: TextTheme.of(context).bodyMedium,),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TabBar(
+                          tabs: _tabs,
+                          labelStyle: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                          labelColor: _selectedColor,
+                          indicatorColor: _selectedColor,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          unselectedLabelColor: _unselectedColor,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: TabBarView(children: [
+                            NewsLKBH(), 
+                            NewsOutside(),
+                          ]),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      )),
+        )),
+      ),
     );
   }
 }

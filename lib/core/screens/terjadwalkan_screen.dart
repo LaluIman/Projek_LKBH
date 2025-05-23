@@ -29,7 +29,7 @@ class TerjadwalkanScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: DefaultButton(text: "Kembali ke beranda", press: (){
-                    Navigator.pushNamedAndRemoveUntil(context, '/custom_navigation_bar', (Route<dynamic> routeName) => false);
+                    Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
                   }, bgcolor: KPrimaryColor, textColor: Colors.white),
                 )
               ],

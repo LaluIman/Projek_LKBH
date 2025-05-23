@@ -26,6 +26,22 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isManualLoading = false;
   bool _isGoogleLoading = false;
 
+  String? image1;
+
+  @override
+  void initState() {
+    super.initState();
+    image1 = "assets/images/login_image.png";
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (image1 != null) {
+      precacheImage(Image.asset(image1!).image, context);
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   "Selamat datang di",
                   style: TextTheme.of(context).titleSmall,
                 ),
-                Text("Konsulhukum",
+                Text("HukumUnmul",
                     style: TextTheme.of(context).titleLarge?.copyWith(
                         color: KPrimaryColor, fontWeight: FontWeight.w800)),
                 Text(
@@ -52,8 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Image.asset("assets/images/login_image.png",
-                      fit: BoxFit.cover),
+                  child: image1 != null ? Image.asset(image1!) : SizedBox(
+                    width: double.infinity,
+                    height: 400,
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(bottom: 70),
@@ -145,8 +163,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return;
                               }
 
-                              await Future.delayed(const Duration(seconds: 3));
-
                               if (mounted) {
                                 setState(() {
                                   _isGoogleLoading = false;
@@ -176,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 "Belum ada akun? ",
-                                style: TextTheme.of(context).bodySmall,
+                                style: TextTheme.of(context).bodyLarge,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -185,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: Text(
                                   "Daftar sekarang!",
-                                  style: TextTheme.of(context).bodySmall?.copyWith(
+                                  style: TextTheme.of(context).bodyLarge?.copyWith(
                                     color: KPrimaryColor
                                   ),
                                 ),

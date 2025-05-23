@@ -440,34 +440,35 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/Berikan masalah.png",
-              fit: BoxFit.cover,
-              width: 300,
+  return Center(
+    child: SingleChildScrollView( 
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min, 
+        children: [
+          Image.asset(
+            "assets/images/Berikan masalah.png",
+            fit: BoxFit.cover,
+            width: 300,
+          ),
+          SizedBox(height: 20),
+          Text(
+            !_isProblemSubmitted
+                ? 'Silakan jelaskan masalah hukum Anda \n secara detail tentang masalah ${_consultationTypeName ?? "hukum"}'
+                : 'Konsultasi telah selesai!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
             ),
-            SizedBox(height: 20),
-            Text(
-              !_isProblemSubmitted
-                  ? 'Silakan jelaskan masalah hukum Anda \n secara detail tentang masalah ${_consultationTypeName ?? "hukum"}'
-                  : 'Konsultasi telah selesai!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildLoadingState() {
     return Center(

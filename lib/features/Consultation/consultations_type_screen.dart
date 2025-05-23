@@ -1,4 +1,5 @@
 import 'package:aplikasi_lkbh_unmul/core/components/custom_tooltip.dart';
+import 'package:aplikasi_lkbh_unmul/core/services/double_tap_exit.dart';
 import 'package:aplikasi_lkbh_unmul/features/Consultation/components/Layanan_button.dart';
 import 'package:aplikasi_lkbh_unmul/features/Consultation/components/consultation_provider.dart';
 import 'package:aplikasi_lkbh_unmul/features/Consultation/model.dart';
@@ -41,7 +42,6 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
         return;
       }
 
-      // First, try to get cached tokens for faster UI update
       Map<String, dynamic>? cachedTokens = _tokenService.getCachedTokens(user.uid);
       if (cachedTokens != null && mounted) {
         setState(() {
@@ -50,7 +50,6 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
         });
       }
 
-      // Then get fresh data from Firestore if needed
       Map<String, dynamic> tokenData = await _tokenService.getUserTokens(user.uid);
 
       if (mounted) {
@@ -70,28 +69,16 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
     }
   }
 
-  // Refresh method for RefreshIndicator
-  Future<void> _refreshTokens() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // Clear cache to force fresh fetch
-      _tokenService.clearCache(user.uid);
-      await _loadTokenData();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RefreshIndicator(
-                color: KPrimaryColor,
-                onRefresh: _refreshTokens,
+    return DoubleTapBackExit(
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+              child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,9 +171,9 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                           })
                     ],
                   ),
-                ),
-              )),
-        )));
+                )),
+          ))),
+    );
   }
 }
 
@@ -226,14 +213,20 @@ class JenisKonsultasiItem extends StatelessWidget {
                 color: KPrimaryColor
               ),
               child: TextButton(
-                child: Text(
-                  'Tutup',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.white),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: Colors.red.shade100,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      "Tutup",
+                      style: TextStyle(
+                          color: KPrimaryColor, fontWeight: FontWeight.w600),
+                    ),
+                  ),
               ),
             ),
           ],

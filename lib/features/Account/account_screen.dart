@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:aplikasi_lkbh_unmul/core/components/custom_snackbar.dart';
 import 'package:aplikasi_lkbh_unmul/core/components/default_button.dart';
+import 'package:aplikasi_lkbh_unmul/core/services/double_tap_exit.dart';
 import 'package:aplikasi_lkbh_unmul/features/Account/components/selections.dart';
 import 'package:aplikasi_lkbh_unmul/features/Auth/services/auth_service.dart';
 import 'package:aplikasi_lkbh_unmul/features/Home/components/username_cache.dart';
@@ -313,178 +314,180 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 30,
-                ),
-                _isLoading ? _buildProfilePicShimmer() : _buildProfileImage(),
-                SizedBox(
-                  height: 10,
-                ),
-                _isLoading
-                    ? _buildUsernameShimmer()
-                    : Text(
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        userName ?? "Nama Pengguna",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+    return DoubleTapBackExit(
+      child: Scaffold(
+        body: SafeArea(
+          child: SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  _isLoading ? _buildProfilePicShimmer() : _buildProfileImage(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _isLoading
+                      ? _buildUsernameShimmer()
+                      : Text(
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          userName ?? "Nama Pengguna",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                _isLoading
-                    ? _buildEmailShimmer()
-                    : Text(
-                        auth.getCurrentUser()?.email?.toString() ??
-                            "Email tidak tersedia",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                  _isLoading
+                      ? _buildEmailShimmer()
+                      : Text(
+                          auth.getCurrentUser()?.email?.toString() ??
+                              "Email tidak tersedia",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(
-                        children: [
-                          Selections(
-                              icon: "assets/icons/User Icon.svg",
-                              title: "Data diri",
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Column(
+                          children: [
+                            Selections(
+                                icon: "assets/icons/User Icon.svg",
+                                title: "Data diri",
+                                press: () =>
+                                    Navigator.pushNamed(context, "/datadiri")),
+                            Selections(
+                              icon: "assets/icons/Panduan.svg",
+                              title: "Panduan Penggunaan",
                               press: () =>
-                                  Navigator.pushNamed(context, "/datadiri")),
-                          Selections(
-                            icon: "assets/icons/Panduan.svg",
-                            title: "Panduan Penggunaan",
-                            press: () =>
-                                Navigator.pushNamed(context, "/panduan"),
-                          ),
-                          Selections(
-                            icon: "assets/icons/QnA Icon.svg",
-                            title: "Hal yang sering ditanyakan",
-                            press: () => Navigator.pushNamed(context, "/qna"),
-                          ),
-                          Selections(
-                            icon: "assets/icons/ProfileLKBH Icon.svg",
-                            title: "Tentang LKBH FH UNMUL",
-                            press: () =>
-                                Navigator.pushNamed(context, "/profil_lkbh"),
-                          ),
-                        ],
+                                  Navigator.pushNamed(context, "/panduan"),
+                            ),
+                            Selections(
+                              icon: "assets/icons/QnA Icon.svg",
+                              title: "Hal yang sering ditanyakan",
+                              press: () => Navigator.pushNamed(context, "/qna"),
+                            ),
+                            Selections(
+                              icon: "assets/icons/ProfileLKBH Icon.svg",
+                              title: "Tentang LKBH FH UNMUL",
+                              press: () =>
+                                  Navigator.pushNamed(context, "/profil_lkbh"),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: DefaultButton(
-                      icon: "assets/icons/Log out.svg",
-                      text: "Keluar dari akun ini",
-                      press: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              titleTextStyle: TextStyle(
-                                  color: KPrimaryColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20),
-                              contentTextStyle: TextStyle(
-                                color: Colors.black,
-                              ),
-                              title: Text("Konfirmasi"),
-                              content: Text("Apakah Anda ingin keluar?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "Batal",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: DefaultButton(
+                        icon: "assets/icons/Log out.svg",
+                        text: "Keluar dari akun ini",
+                        press: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                titleTextStyle: TextStyle(
+                                    color: KPrimaryColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20),
+                                contentTextStyle: TextStyle(
+                                  color: Colors.black,
                                 ),
-                                TextButton(
-                                  onPressed: () async {
-                                    final auth = AuthService();
-                                    auth.signOut();
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) => Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            LoadingAnimationWidget.inkDrop(
-                                                color: KPrimaryColor, size: 70),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            Text(
-                                              "Keluar dari akun...",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600,
-                                                  decoration:
-                                                      TextDecoration.none),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                    await Future.delayed(
-                                        const Duration(seconds: 3));
-
-                                    // Clear cache saat logout
-                                    UserCacheService().clearCache();
-
-                                    Navigator.pop(context);
-                                    Navigator.pushReplacementNamed(
-                                        context, "/login");
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 25, vertical: 10),
-                                    decoration: BoxDecoration(
-                                        color: KPrimaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                title: Text("Konfirmasi"),
+                                content: Text("Apakah Anda ingin keluar?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
                                     child: Text(
-                                      "Keluar",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600),
+                                      "Batal",
+                                      style: TextStyle(color: Colors.black),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      bgcolor: KPrimaryColor,
-                      textColor: Colors.white),
-                )
-              ],
+                                  TextButton(
+                                    onPressed: () async {
+                                      final auth = AuthService();
+                                      auth.signOut();
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) => Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              LoadingAnimationWidget.inkDrop(
+                                                  color: KPrimaryColor, size: 70),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Text(
+                                                "Keluar dari akun...",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w600,
+                                                    decoration:
+                                                        TextDecoration.none),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                      await Future.delayed(
+                                          const Duration(seconds: 3));
+      
+                                      // Clear cache saat logout
+                                      UserCacheService().clearCache();
+      
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacementNamed(
+                                          context, "/login");
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 25, vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: KPrimaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Text(
+                                        "Keluar",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        bgcolor: KPrimaryColor,
+                        textColor: Colors.white),
+                  )
+                ],
+              ),
             ),
           ),
         ),

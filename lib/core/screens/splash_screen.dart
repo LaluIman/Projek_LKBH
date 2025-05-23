@@ -58,15 +58,15 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.cover,
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
-            Text("Konsulhukum",
+            Text("HukumUnmul",
                 style: TextTheme.of(context).titleLarge?.copyWith(
                     color: Colors.white, fontWeight: FontWeight.w800)),
             Text(
               "LKBH FH Universitas Mulawarman",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),

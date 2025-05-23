@@ -1,4 +1,5 @@
-import 'package:aplikasi_lkbh_unmul/core/components/default_button.dart';import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
+import 'package:aplikasi_lkbh_unmul/core/components/default_button.dart';
+import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
 import 'package:flutter/material.dart';
 
 class TerlaporkanScreen extends StatelessWidget {
@@ -28,7 +29,7 @@ class TerlaporkanScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: DefaultButton(text: "Kembali ke beranda", press: (){
-                    Navigator.pushNamedAndRemoveUntil(context, '/custom_navigation_bar', (Route<dynamic> routeName) => false);
+                    Navigator.pushReplacementNamed(context, '/custom_navigation_bar');
                   }, bgcolor: KPrimaryColor, textColor: Colors.white),
                 )
               ],

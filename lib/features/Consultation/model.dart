@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ConsultationType {
   final String id;
@@ -10,6 +11,15 @@ class ConsultationType {
     required this.name,
     required this.icon,
   });
+
+  static Future<void> precacheIcons(BuildContext context) async {
+    for (var type in listConsultationType) {
+      await precacheImage(
+        ExactAssetImage(SvgPicture(SvgStringLoader as BytesLoader) as String, package: type.icon),
+        context,
+      );
+    }
+  }
 
   static List<ConsultationType> listConsultationType = [
     ConsultationType(id: "Waris", name: "Waris", icon: "assets/icons/konsultasi/Waris Icon.svg"),
@@ -53,6 +63,15 @@ class LayananButtontChoises {
     required this.buttonDesc,
     required this.click,
   });
+
+  static Future<void> precacheIcons(BuildContext context) async {
+    for (var layanan in listLayananButtontChoises) {
+      await precacheImage(
+        ExactAssetImage(SvgPicture(SvgStringLoader as BytesLoader) as String, package: layanan.buttonIcon),
+        context,
+      );
+    }
+  }
 
   static List<LayananButtontChoises> listLayananButtontChoises = [
     LayananButtontChoises(

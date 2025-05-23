@@ -1,10 +1,6 @@
-import 'package:aplikasi_lkbh_unmul/core/components/custom_snackbar.dart';
-import 'package:aplikasi_lkbh_unmul/core/components/default_button.dart';
 import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
-import 'package:aplikasi_lkbh_unmul/core/services/connection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:provider/provider.dart';
 
 class NoInternetScreen extends StatefulWidget {
   static String routeName = "/no_internet";
@@ -16,7 +12,25 @@ class NoInternetScreen extends StatefulWidget {
 }
 
 class _NoInternetScreenState extends State<NoInternetScreen> {
-  bool _isChecking = false;
+  Image? image1;
+
+  @override
+  void initState() {
+    super.initState();
+    image1 = Image.asset(
+      "assets/images/No Internet.png",
+      fit: BoxFit.cover,
+      width: 300,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (image1 != null) {
+      precacheImage(image1!.image, context);
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +57,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  Image.asset(
-                    "assets/images/No Internet.png",
-                    fit: BoxFit.cover,
-                    width: 300,
-                  ),
+                  if (image1 != null) image1!,
                   SizedBox(
                     height: 20,
                   ),
@@ -58,20 +68,6 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
                         .bodyLarge
                         ?.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: DefaultButton(
-                        text: "Coba lagi",
-                        press: () async {
-                          await _checkConnectionAndNavigate();
-                        },
-                        bgcolor: KPrimaryColor,
-                        textColor: Colors.white,
-                        isLoading: _isChecking,),
-                  )
                 ],
               ),
             ),
@@ -79,40 +75,5 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _checkConnectionAndNavigate() async {
-    setState(() {
-      _isChecking = true;
-    });
-
-    try {
-      final hasInternet =
-          await InternetConnectionChecker.createInstance().hasConnection;
-
-      await Provider.of<ConnectivityProvider>(context, listen: false)
-          .checkConnection();
-
-      if (hasInternet) {
-        if (mounted) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      } else {
-        if (mounted) {
-          print("Masih belum ada koneksi internet");
-        }
-      }
-    } catch (e) {
-      print('Error checking internet connection: $e');
-      if (mounted) {
-        DefaultCustomSnackbar.buildSnackbar(context, "Terjadi kesalahan saat memeriksa interent", KError);
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isChecking = false;
-        });
-      }
-    }
   }
 }

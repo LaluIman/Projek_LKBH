@@ -133,7 +133,6 @@ class _LaporScreenState extends State<LaporScreen> {
     return shouldPop ?? false;
   }
 
-  // Added showExitDialog function
   Future<bool> _showExitDialog(BuildContext context) async {
     bool? exitConfirmed = await showDialog<bool>(
       context: context,
@@ -180,7 +179,6 @@ class _LaporScreenState extends State<LaporScreen> {
     return exitConfirmed ?? false;
   }
 
-  // Added form validation function
   bool _isFormValid() {
     return _reporterController.text.isNotEmpty &&
         _numberController.text.isNotEmpty &&
@@ -358,7 +356,6 @@ class _LaporScreenState extends State<LaporScreen> {
                 ? SizedBox()
                 : DefaultBackButton(
                     onPressed: () async {
-                      // Custom logic before going back
                       final shouldPop = await _showExitDialog(context);
                       if (shouldPop && context.mounted) {
                         Navigator.of(context).pop();
@@ -450,7 +447,7 @@ class _LaporScreenState extends State<LaporScreen> {
                                 SvgPicture.asset("assets/icons/Upload KTP.svg", width: 80,),
                                 SizedBox(height: 10),
                                 Text(
-                                  "Format png, jpg, jpeg",
+                                  "Format png, jpg, jpeg(Maks 1MB)",
                                   style:  TextTheme.of(context)
                                     .bodyMedium?.copyWith(
                                       color: Colors.black,

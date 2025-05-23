@@ -4,10 +4,34 @@ import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfilLkbhScreen extends StatelessWidget {
+class ProfilLkbhScreen extends StatefulWidget {
   const ProfilLkbhScreen({super.key});
 
   static String routeName = "/profil_lkbh";
+
+  @override
+  State<ProfilLkbhScreen> createState() => _ProfilLkbhScreenState();
+}
+
+
+class _ProfilLkbhScreenState extends State<ProfilLkbhScreen> {
+
+  String? image1Path;
+
+  @override
+  void initState() {
+    super.initState();
+    image1Path = "assets/images/fotolkbh.jpg";
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (image1Path != null) {
+      precacheImage(Image.asset(image1Path!).image, context);
+    }
+    super.didChangeDependencies();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +49,7 @@ class ProfilLkbhScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "LKBH FH UNMUL",
@@ -38,7 +62,6 @@ class ProfilLkbhScreen extends StatelessWidget {
                           style:TextTheme.of(context).bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
@@ -48,7 +71,7 @@ class ProfilLkbhScreen extends StatelessWidget {
                   ),
                   ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset("assets/images/fotolkbh.jpg")),
+                      child: image1Path != null ? Image.asset(image1Path!) : Container()),
                   SizedBox(
                     height: 50,
                   ),

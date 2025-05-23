@@ -22,10 +22,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isLocaleInitialized = false;
 
+  Image? image1;
+
   @override
   void initState() {
     super.initState();
     _initializeLocale();
+    image1 = Image.asset(
+      "assets/images/Notifikasi page.png",
+      width: 200,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (image1 != null) {
+      precacheImage(image1!.image, context);
+    }
+    super.didChangeDependencies();
   }
 
   Future<void> _initializeLocale() async {
@@ -51,7 +65,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         return;
       }
 
-      // Check for both uid and userId in case the field names are different
       final queryReports = _firestore
           .collection('laporan_kasus')
           .where('uid', isEqualTo: currentUser.uid);
@@ -65,17 +78,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
       final queryCompletedConsultations = _firestore
           .collection('konsultasi_selesai')
           .where('userId', isEqualTo: currentUser.uid);
-      final completedConsultationsSnapshot = await queryCompletedConsultations.get();
+      final completedConsultationsSnapshot =
+          await queryCompletedConsultations.get();
 
       final List<NotificationItem> allNotifications = [];
 
-      // Process reports
       for (var doc in reportsSnapshot.docs) {
         final data = doc.data();
         final timestamp = data['timestamp'] as Timestamp?;
 
-        // Check if report is completed
-        final isCompleted = data['status'] == 'selesai' || data['kesimpulan'] != null;
+        final isCompleted =
+            data['status'] == 'selesai' || data['kesimpulan'] != null;
 
         if (isCompleted) {
           allNotifications.add(
@@ -114,9 +127,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
         final timestamp = data['timestamp'] as Timestamp?;
         final day = data['hari'] as String?;
         final time = data['waktu'] as String?;
-        
+
         // Check if appointment is completed
-        final isCompleted = data['status'] == 'selesai' || data['kesimpulan'] != null;
+        final isCompleted =
+            data['status'] == 'selesai' || data['kesimpulan'] != null;
 
         if (isCompleted) {
           allNotifications.add(
@@ -201,9 +215,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
           actions: [
             Text(
               'Notifikasi',
-              style: TextTheme.of(context).titleMedium?.copyWith(
-                fontWeight: FontWeight.w600
-              ),
+              style: TextTheme.of(context)
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
           ]),
       body: _isLoading
@@ -213,10 +227,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/Notifikasi page.png",
-                      width: 200,
-                    ),
+                    if (image1 != null) image1!,
                     Text(
                       'Tidak ada notifikasi',
                       style: TextTheme.of(context).titleMedium,
@@ -354,10 +365,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         SizedBox(height: 4),
                         Text(
                           'Layanan: ${notification.service}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey.shade800,
-                            height: 1.3,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey.shade800,
+                                    height: 1.3,
+                                  ),
                         ),
                       ],
                     ],

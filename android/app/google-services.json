@@ -12,7 +12,20 @@
           "package_name": "com.example.aplikasi_lkbh_unmul"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1092859518920-bsnc1122log3tc49cjvin6ulu9m9f1iv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aplikasi_lkbh_unmul",
+            "certificate_hash": "abaac53e8ac711f8d7207975e12bfc04c9b27262"
+          }
+        },
+        {
+          "client_id": "1092859518920-k96g0qn88d92vjh6k8sj7no86kkdg2rp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDHYeoX4lJ7KZu33K--J4Xo0Ch3Jd_NM4o"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092859518920-k96g0qn88d92vjh6k8sj7no86kkdg2rp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1092859518920-6j91l64ec0pkt71nafuc2u4fi2hiv19m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aplikasiLkbhUnmul"
+              }
+            }
+          ]
         }
       }
     }

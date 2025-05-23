@@ -25,10 +25,24 @@ class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
   final ConsultationService _consultationService = ConsultationService();
   bool _isLocaleInitialized = false;
 
+  Image? image1;
+
   @override
   void initState() {
     super.initState();
     _initializeLocale();
+    image1 = Image.asset(
+      "assets/images/Notifikasi page.png",
+      width: 200,
+    );
+  }
+
+    @override
+  void didChangeDependencies() {
+    if (image1 != null) {
+      precacheImage(image1!.image, context);
+    }
+    super.didChangeDependencies();
   }
 
   Future<void> _initializeLocale() async {
@@ -226,10 +240,7 @@ class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/Notifikasi page.png",
-                      width: 200,
-                    ),
+                    if (image1 != null) image1!,
                     Text(
                       'Belum ada konsultasi',
                       style: TextTheme.of(context).titleMedium,

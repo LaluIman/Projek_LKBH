@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:aplikasi_lkbh_unmul/core/components/custom_snackbar.dart';
 import 'package:aplikasi_lkbh_unmul/core/components/default_back_button.dart';
-import 'package:aplikasi_lkbh_unmul/core/components/default_button.dart';import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
+import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -20,16 +20,31 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
   bool _isSending = false;
   Timer? _timer;
 
+  Image? image1;
+
   @override
   void initState() {
     super.initState();
     sendverifylink();
     startAutoReload();
+    image1 = Image.asset(
+      "assets/images/verify.png",
+      width: 300,
+      height: 300,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (image1 != null) {
+      precacheImage(image1!.image, context);
+    }
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    _timer?.cancel(); // pastikan timer dihentikan saat widget di-dispose
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -42,10 +57,12 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
     setState(() => _isSending = true);
     try {
       await user.sendEmailVerification();
-      DefaultCustomSnackbar.buildSnackbar(context, "Link verifikasi sudah terkirim di inbox Gmailmu", KSuccess);
+      DefaultCustomSnackbar.buildSnackbar(
+          context, "Link verifikasi sudah terkirim di inbox Gmailmu", KSuccess);
       print("verifikasi terkirim");
     } catch (e) {
-      DefaultCustomSnackbar.buildSnackbar(context, "Gagal mengirim link verifikasi!", KPrimaryColor);
+      DefaultCustomSnackbar.buildSnackbar(
+          context, "Gagal mengirim link verifikasi!", KPrimaryColor);
       print(e);
     } finally {
       setState(() => _isSending = false);
@@ -91,7 +108,6 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
           Navigator.pushReplacementNamed(context, "/complete_profile");
         }
       }
-
     });
   }
 
@@ -99,10 +115,9 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        leadingWidth: 150,
-        leading: DefaultBackButton()
-      ),
+          automaticallyImplyLeading: true,
+          leadingWidth: 150,
+          leading: DefaultBackButton()),
       body: SafeArea(
         child: SizedBox(
           width: double.infinity,
@@ -110,39 +125,18 @@ class _VerifyAccountScreenState extends State<VerifyAccountScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 40),
-                Text(
-                  "Verifikasi Akun",
-                  style: TextTheme.of(context).titleLarge?.copyWith(
-                      color: KPrimaryColor
-                    )
-                ),
+                Text("Verifikasi Akun",
+                    style: TextTheme.of(context)
+                        .titleLarge
+                        ?.copyWith(color: KPrimaryColor)),
                 Text(
                   "Cek Inbox dari akun ${auth.currentUser!.email.toString()} \n dan verifikasi untuk melanjutkan.",
                   style: TextTheme.of(context).bodyLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 50),
-                Image.asset(
-                  "assets/images/verify.png",
-                  width: 300,
-                  height: 300,
-                ),
+                if (image1 != null) image1!,
                 const SizedBox(height: 40),
-                Text(
-                  "Pesan verifikasi belum terkirim? Kirim ulang!",
-                  style: TextTheme.of(context).bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: DefaultButton(
-                    text: 'Kirim Ulang',
-                    press: sendverifylink,
-                    bgcolor: KPrimaryColor,
-                    textColor: Colors.white,
-                    icon: 'assets/icons/Resend Icon.svg',
-                  ),
-                ),
               ],
             ),
           ),
