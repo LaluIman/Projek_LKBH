@@ -207,27 +207,21 @@ class JenisKonsultasiItem extends StatelessWidget {
           content: Text(
               "Maaf, token harian Anda telah habis! \nToken anda akan di perbarui diesok hari."),
           actions: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: KPrimaryColor
-              ),
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.red.shade100,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      "Tutup",
-                      style: TextStyle(
-                          color: KPrimaryColor, fontWeight: FontWeight.w600),
-                    ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.red.shade100,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    "Tutup",
+                    style: TextStyle(
+                        color: KPrimaryColor, fontWeight: FontWeight.w600),
                   ),
-              ),
+                ),
             ),
           ],
         );

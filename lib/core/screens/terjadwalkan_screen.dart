@@ -22,7 +22,7 @@ class TerjadwalkanScreen extends StatelessWidget {
                 SizedBox(height: 10,),
                 Image.asset("assets/images/Terjadwalkan.png", fit: BoxFit.cover, width: 300,),
                 SizedBox(height: 20,),
-                 Text("Kamu Akan di kabari oleh tim LKBH melewati \n Whatsapp!", textAlign: TextAlign.center, style: TextTheme.of(context).bodyLarge?.copyWith(
+                 Text("Kamu akan di kabari oleh tim LKBH melewati \n Whatsapp!", textAlign: TextAlign.center, style: TextTheme.of(context).bodyLarge?.copyWith(
                   fontWeight: FontWeight.w600
                 ),),
                 SizedBox(height: 50,),

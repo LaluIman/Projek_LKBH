@@ -9,7 +9,6 @@ import 'package:aplikasi_lkbh_unmul/core/constant/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -225,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    // First, try to get cached tokens for immediate UI update
+    //Ambil cached token buat update di UI
     Map<String, dynamic>? cachedTokens = _tokenService.getCachedTokens(user.uid);
     if (cachedTokens != null && mounted) {
       setState(() {
@@ -234,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
 
-    // Then get fresh tokens from Firestore (this will handle date changes automatically)
+    //refresh token di firestore
     Map<String, dynamic> tokenData = await _tokenService.getUserTokens(user.uid);
 
     if (mounted) {
@@ -247,7 +246,6 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Error loading token data: $e');
     if (mounted) {
       setState(() {
-        // Try to keep cached value if available
         Map<String, dynamic>? cachedTokens = _tokenService.getCachedTokens(
           FirebaseAuth.instance.currentUser?.uid ?? ''
         );

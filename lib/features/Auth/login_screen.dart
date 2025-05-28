@@ -149,37 +149,77 @@ class _LoginScreenState extends State<LoginScreen> {
                           DefaultButton(
                             text: "Masuk dengan Google",
                             press: () async {
+                              // Reset error message sebelum login
                               setState(() {
                                 _isGoogleLoading = true;
+                                errorMessage = null;
                               });
 
-                              final auth = AuthService();
-                              final result = await auth.signInWithGoogle();
+                              try {
+                                print("Memulai proses Google Sign In...");
+                                final auth = AuthService();
+                                final result = await auth.signInWithGoogle();
 
-                              if (result == null) {
-                                setState(() {
-                                  _isGoogleLoading = false;
-                                });
-                                return;
-                              }
-
-                              if (mounted) {
-                                setState(() {
-                                  _isGoogleLoading = false;
-                                });
-                              }
-
-                              final user = auth.getCurrentUser();
-                              if (user != null && !user.emailVerified) {
-                                if (!user.emailVerified) {
-                                  Navigator.pushReplacementNamed(
-                                      context, "/verify");
+                                if (result == null) {
+                                  // User membatalkan login atau ada masalah
+                                  print("Google Sign In dibatalkan atau gagal");
+                                  if (mounted) {
+                                    setState(() {
+                                      _isGoogleLoading = false;
+                                      // Tidak perlu menampilkan error jika user membatalkan
+                                    });
+                                  }
                                   return;
                                 }
-                              }
 
-                              Navigator.pushReplacementNamed(
-                                  context, "/complete_profile");
+                                print("Google Sign In berhasil, memproses navigasi...");
+
+                                if (mounted) {
+                                  setState(() {
+                                    _isGoogleLoading = false;
+                                  });
+                                }
+
+                                // Cek apakah user berhasil login
+                                final user = auth.getCurrentUser();
+                                if (user != null) {
+                                  print("User berhasil login: ${user.email}");
+                                  
+                                  // Cek apakah profil user sudah lengkap
+                                  bool needsCompletion = await auth.needsProfileCompletion(user.uid);
+                                  print("Needs profile completion: $needsCompletion");
+                                  
+                                  if (needsCompletion) {
+                                    print("Navigasi ke complete profile...");
+                                    // Jika profil belum lengkap, ke halaman complete profile
+                                    Navigator.pushReplacementNamed(
+                                        context, "/complete_profile");
+                                  } else {
+                                    print("Navigasi ke halaman utama...");
+                                    // Jika profil sudah lengkap, langsung ke halaman utama
+                                    Navigator.pushReplacementNamed(
+                                        context, "/custom_navigation_bar");
+                                  }
+                                } else {
+                                  print("Error: User null setelah login");
+                                  // Jika user null, ada masalah
+                                  setState(() {
+                                    errorMessage = "Login gagal. Silakan coba lagi.";
+                                  });
+                                }
+
+                              } catch (e) {
+                                print("Error Google Sign In: $e");
+                                if (mounted) {
+                                  setState(() {
+                                    _isGoogleLoading = false;
+                                    errorMessage = e
+                                        .toString()
+                                        .replaceAll("Exception:", "")
+                                        .trim();
+                                  });
+                                }
+                              }
                             },
                             bgcolor: KGoogleButton,
                             textColor: Colors.black,

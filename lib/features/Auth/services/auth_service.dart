@@ -42,19 +42,36 @@ class AuthService {
   // Login dengan Google, serta deteksi jika email sudah terdaftar dengan metode lain
   Future<UserCredential?> signInWithGoogle() async {
     try {
+      print("Memulai Google Sign In...");
+      
+      // Cek apakah sudah ada user yang sign in sebelumnya
+      GoogleSignInAccount? currentGoogleUser = _googleSignIn.currentUser;
+      if (currentGoogleUser != null) {
+        print("Ditemukan user Google yang sudah sign in: ${currentGoogleUser.email}");
+        // Silently sign in jika sudah ada
+        await _googleSignIn.signInSilently();
+      }
+      
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      // Jika login dibatalkan
-      if (googleUser == null) return null;
+      // Jika login dibatalkan atau gagal
+      if (googleUser == null) {
+        print("Google Sign In dibatalkan oleh user atau gagal");
+        return null;
+      }
 
       String email = googleUser.email;
+      print("Berhasil mendapat akun Google: $email");
 
       // Cek apakah email sudah terdaftar dengan metode lain
       List<String> signInMethods = await _getSignInMethodsForEmail(email);
+      print("Sign in methods untuk email ini: $signInMethods");
 
       // Jika sudah terdaftar dan bukan Google
       if (signInMethods.isNotEmpty && !signInMethods.contains('google.com')) {
         if (signInMethods.contains('password')) {
+          // Sign out Google karena ada konflik
+          await _googleSignIn.signOut();
           throw Exception(
             "Email ini sudah terdaftar dengan metode email/password. "
             "Silakan login menggunakan email dan password, atau hubungi admin untuk menggabungkan akun."
@@ -62,35 +79,87 @@ class AuthService {
         }
       }
 
+      print("Mendapatkan authentication credential...");
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Pastikan access token dan id token ada
+      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+        print("Token Google null - accessToken: ${googleAuth.accessToken}, idToken: ${googleAuth.idToken}");
+        await _googleSignIn.signOut();
+        throw Exception("Gagal mendapatkan token dari Google");
+      }
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken
       );
 
+      print("Mencoba login ke Firebase dengan credential...");
+
       // Login ke Firebase
       UserCredential userCredential = await _auth.signInWithCredential(credential);
 
       if (userCredential.user != null) {
         String userId = userCredential.user!.uid;
+        print("Login berhasil! User ID: $userId, Email: ${userCredential.user!.email}");
 
         // Inisialisasi token jika belum dilakukan di sesi ini
         if (_lastInitializedUserId != userId) {
-          bool profileExists = await _checkUserProfileExists(userId);
-          if (!profileExists) {
-            await _tokenService.initializeOrResetTokens(userId);
+          try {
+            bool profileExists = await _checkUserProfileExists(userId);
+            print("Profile exists: $profileExists");
+            
+            if (!profileExists) {
+              print("Menginisialisasi token untuk user baru");
+              await _tokenService.initializeOrResetTokens(userId);
+            }
+            _lastInitializedUserId = userId;
+          } catch (tokenError) {
+            print("Error inisialisasi token: $tokenError");
+            // Lanjutkan meskipun ada error token
           }
-          _lastInitializedUserId = userId;
         }
+      } else {
+        await _googleSignIn.signOut();
+        throw Exception("User credential null setelah login");
       }
 
       return userCredential;
     } on PlatformException catch (e) {
-      throw Exception("Login Google gagal: ${e.message}");
+      print("PlatformException: ${e.code} - ${e.message}");
+      await _googleSignIn.signOut();
+      
+      if (e.code == 'sign_in_canceled') {
+        print("User membatalkan sign in");
+        return null;
+      } else if (e.code == 'network_error') {
+        throw Exception("Tidak ada koneksi internet. Periksa koneksi Anda.");
+      } else {
+        throw Exception("Login Google gagal: ${e.message ?? e.code}");
+      }
     } on FirebaseAuthException catch (e) {
-      throw Exception("Autentikasi gagal: ${e.message ?? e.code}");
+      print("FirebaseAuthException: ${e.code} - ${e.message}");
+      await _googleSignIn.signOut();
+      
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          throw Exception("Email sudah terdaftar dengan metode login lain.");
+        case 'invalid-credential':
+          throw Exception("Credential Google tidak valid.");
+        case 'operation-not-allowed':
+          throw Exception("Login Google tidak diizinkan.");
+        case 'user-disabled':
+          throw Exception("Akun Anda telah dinonaktifkan.");
+        default:
+          throw Exception("Autentikasi gagal: ${e.message ?? e.code}");
+      }
     } catch (e) {
+      print("General exception: $e");
+      await _googleSignIn.signOut();
+      
+      if (e.toString().contains("dibatalkan")) {
+        return null;
+      }
       throw Exception(e.toString());
     }
   }
@@ -273,6 +342,7 @@ class AuthService {
     try {
       return !(await _checkUserProfileExists(userId));
     } catch (e) {
+      print("Error checking profile completion: $e");
       return true;
     }
   }

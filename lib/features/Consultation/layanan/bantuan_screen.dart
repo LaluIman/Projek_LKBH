@@ -464,7 +464,6 @@ class _BantuanScreenState extends State<BantuanScreen> {
                 ? SizedBox()
                 : DefaultBackButton(
                     onPressed: () async {
-                      // Custom logic before going back
                       final shouldPop = await _showExitDialog(context);
                       if (shouldPop && context.mounted) {
                         Navigator.of(context).pop();
